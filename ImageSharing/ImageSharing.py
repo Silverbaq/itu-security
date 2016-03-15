@@ -6,8 +6,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 DATABASE = './tmp/database.db'
 DEBUG = True
 SECRET_KEY = 'development key'
-USERNAME = 'admin'
-PASSWORD = 'default'
+
 
 # create our little application :)
 app = Flask(__name__)
@@ -29,20 +28,41 @@ def connect_db():
 
 @app.route('/')
 def show_entries():
-    cur = g.db.execute('select title, text from entries order by id desc')
-    entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
-    return render_template('show_entries.html', entries=entries)
+    return render_template('index.html')
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] == "":
+            error = 'Username needed'
+        elif request.form['password'] == "":
+            error = 'Password needed'
+        else:
+            session['logged_in'] = True
+            g.db.execute('insert into user (username, password) values (?, ?)',
+                     [request.form['username'], request.form['password']])
+            g.db.commit()
+
+            flash('Successfully created - You can now login')
+            return redirect(url_for('login'))
+    return render_template('create.html', error=error)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
-            error = 'Invalid password'
+        username = request.form['username']
+        password = request.form['password']
+
+        cur = g.db.execute('select id from user where username = (?) and password = (?)', [username, password])
+        userid = [dict(id=row[0]) for row in cur.fetchall()]
+
+        if len(userid) == 0:
+            error = 'Invalid username or password'
         else:
             session['logged_in'] = True
+            session['user_id'] = userid[0].get('id')
             flash('You were logged in')
             return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
@@ -50,6 +70,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    session.pop('user_id', None)
     flash('You were logged out')
     return redirect(url_for('show_entries'))
 
