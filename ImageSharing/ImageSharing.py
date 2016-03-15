@@ -27,7 +27,7 @@ def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 @app.route('/')
-def show_entries():
+def index():
     return render_template('index.html')
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -64,7 +64,7 @@ def login():
             session['logged_in'] = True
             session['user_id'] = userid[0].get('id')
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('profile'))
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -72,7 +72,7 @@ def logout():
     session.pop('logged_in', None)
     session.pop('user_id', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('index'))
 
 @app.route('/add', methods=['POST'])
 def add_entry():
@@ -84,6 +84,18 @@ def add_entry():
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
 
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    return ""
+
+@app.route('/profile', methods=['GET'])
+def profile():
+    id = session.get('user_id')
+
+    cur = g.db.execute('select id, image from images where user_id = (?)', [id])
+    images = [dict(id=row[0], image=row[1]) for row in cur.fetchall()]
+
+    return render_template('profile.html', images=images)
 
 if __name__ == '__main__':
     app.run()

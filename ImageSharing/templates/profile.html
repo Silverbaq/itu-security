@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <a href="{{ url_for('upload') }}">Upload image</a>
+  {% endif %}
+
+    <ul class=entries>
+  {% for img in images%}
+    <li><h2>Your images</h2>
+  {% else %}
+    <li><em>Unbelievable.  No images so far</em>
+  {% endfor %}
+  </ul>
+{% endblock %}
