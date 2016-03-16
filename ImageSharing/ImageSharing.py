@@ -92,6 +92,12 @@ def add_entry():
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
 
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
@@ -99,8 +105,8 @@ def upload():
             if file and allowed_file(file.filename):
                 filename = werkzeug.secure_filename(file.filename)
 
-                g.db.execute('insert into images (image, user_id) values (?, ?)',
-                             (buffer(file.read()),session['user_id']))
+                g.db.execute('insert into images (image, user_id, filename) values (?, ?, ?)',
+                             (buffer(file.read()),session['user_id'], filename))
                 g.db.commit()
 
                 flash('uploaded image: %s' % (filename))
@@ -110,41 +116,31 @@ def upload():
 
     return render_template('upload.html')
 
+
+def blob_to_image(filename, ablob):
+    folder = './static/img/'
+    with open(folder + filename, 'wb') as output_file:
+        output_file.write(ablob)
+    return filename
+
 @app.route('/profile', methods=['GET'])
 def profile():
     id = session.get('user_id')
 
-    cur = g.db.execute('select id, image from images where user_id = (?)', [id])
-    images = [dict(id=row[0], image=row[1]) for row in cur.fetchall()]
+    cur = g.db.execute('select id, image, filename from images where user_id = (?)', [id])
+    images = [dict(id=row[0], image=blob_to_image(row[2],row[1])) for row in cur.fetchall()]
+
+
 
    # cur = g.db.execute('select id, images.image from images inner join share on images.id = share.image_id where share.to_id = (?)', [id])
     shared_images = [dict(id=row[0], image=row[1]) for row in cur.fetchall()]
 
     return render_template('profile.html', images=images, shared_images=shared_images)
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+@app.route('/share', methods=['POST','GET'])
+def share():
 
-@app.route('/2', methods=['GET', 'POST'])
-def upload_file():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            filename = werkzeug.secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
-
+    return render_template('share.html')
 
 
 if __name__ == '__main__':
