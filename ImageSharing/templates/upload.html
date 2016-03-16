@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
     {% if session.logged_in %}
-
+        <a href="{{ url_for('profile') }}">Back</a>
         <ul class=entries>
 
             <li><h2>Upload image</h2>
