@@ -1,14 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
-  {% if session.logged_in %}
-    <a href="{{ url_for('upload') }}">Upload image</a>
-  {% endif %}
+    {% if session.logged_in %}
+        <a href="{{ url_for('upload') }}">Upload image</a>
+
 
     <ul class=entries>
-  {% for img in images%}
-    <li><h2>Your images</h2>
-  {% else %}
-    <li><em>Unbelievable.  No images so far</em>
-  {% endfor %}
-  </ul>
+
+        <li><h2>Your images</h2>
+            {% for img in images %}
+
+            {% else %}
+                <li><em>Unbelievable. No images so far</em>
+            {% endfor %}
+
+
+        <li><h2>Images shared with you</h2>
+            {% for img in shared_images %}
+
+            {% else %}
+                <li><em>Unbelievable. No images so far</em>
+            {% endfor %}
+
+    </ul>
+
+    {% endif %}
 {% endblock %}

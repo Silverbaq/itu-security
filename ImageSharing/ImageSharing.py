@@ -1,16 +1,24 @@
+import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
+import werkzeug
+
 
 # configuration
 DATABASE = './tmp/database.db'
 DEBUG = True
 SECRET_KEY = 'development key'
 
+UPLOAD_FOLDER = './upload'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+
 
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 @app.before_request
 def before_request():
@@ -86,7 +94,21 @@ def add_entry():
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
-    return ""
+    if request.method == 'POST':
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                filename = werkzeug.secure_filename(file.filename)
+
+                g.db.execute('insert into images (image, user_id) values (?, ?)',
+                             (buffer(file.read()),session['user_id']))
+                g.db.commit()
+
+                flash('uploaded image: %s' % (filename))
+                return redirect(url_for('profile'))
+            else:
+                flash('filetype not allowed')
+
+    return render_template('upload.html')
 
 @app.route('/profile', methods=['GET'])
 def profile():
@@ -95,7 +117,35 @@ def profile():
     cur = g.db.execute('select id, image from images where user_id = (?)', [id])
     images = [dict(id=row[0], image=row[1]) for row in cur.fetchall()]
 
-    return render_template('profile.html', images=images)
+   # cur = g.db.execute('select id, images.image from images inner join share on images.id = share.image_id where share.to_id = (?)', [id])
+    shared_images = [dict(id=row[0], image=row[1]) for row in cur.fetchall()]
+
+    return render_template('profile.html', images=images, shared_images=shared_images)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/2', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = werkzeug.secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    '''
+
+
 
 if __name__ == '__main__':
     app.run()
