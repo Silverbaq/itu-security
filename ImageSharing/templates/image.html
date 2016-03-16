@@ -42,7 +42,7 @@
                     </dl>
                 </form>
                 {% for msg in comments %}
-                    <li><h3>{{ msg.username }}</h3>{{ msg.text|safe }}
+                    <li><h3>{{ msg.username }}</h3>{{ msg.comment|safe }}
                         {% else %}
                     <li><em>Unbelievable. No comments so far</em>
                 {% endfor %}

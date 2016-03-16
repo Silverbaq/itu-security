@@ -154,7 +154,10 @@ def show_image(id):
         [session.get('user_id')])
     share = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
 
-    return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share)
+    cur = g.db.execute('select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)', [id])
+    comments = [dict(username=row[0], comment=row[1]) for row in cur.fetchall()]
+
+    return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments)
 
 
 @app.route('/shareimage', methods=['POST'])
