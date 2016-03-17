@@ -19,3 +19,6 @@ Install dependencies
 navigate to root folder (where ImageSharing.py is located)
 
 `python ImageSharing.py`
+
+Open browser
+`http://localhost:5000`
