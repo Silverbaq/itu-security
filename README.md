@@ -10,7 +10,7 @@ Build in Flask with Python 2.7
 Install Python 2.7
 
 ##### Debian
-`sudo apt-get update && apt-get install python2.7`
+`sudo apt-get update && sudo apt-get install python2.7 python-pip`
 
 Install dependencies
 `pip install flask werkzeug`
