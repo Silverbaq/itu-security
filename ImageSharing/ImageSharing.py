@@ -18,6 +18,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.jinja_env.autoescape = True
 
 
 @app.before_request
@@ -167,7 +168,7 @@ def show_image(id):
 
         return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments, owner=img[0].get('user_id')==user_id)
     else:
-        return 'No way!!'
+        return redirect(url_for('no_way'))
 
 
 def has_permission(img_id, user_id):
@@ -190,15 +191,17 @@ def has_permission(img_id, user_id):
 @app.route('/shareimage', methods=['POST'])
 def share_image():
     if request.method == 'POST':
-        #TODO: Needs to check who can share
         image_id = request.form['imageid']
         to_userid = request.form['userid']
 
-        g.db.execute('insert into share (image_id, to_id, from_id) values (?, ?, ?)',
-                     [image_id, to_userid, get_userid_by_token(session.get('token'))])
-        g.db.commit()
-        flash('Image shared')
-        return redirect(url_for('show_image', id=image_id))
+        if has_permission(image_id, get_userid_by_token(session.get('token'))):
+
+
+            g.db.execute('insert into share (image_id, to_id, from_id) values (?, ?, ?)',
+                         [image_id, to_userid, get_userid_by_token(session.get('token'))])
+            g.db.commit()
+            flash('Image shared')
+            return redirect(url_for('show_image', id=image_id))
 
 
 @app.route('/unshare', methods=['POST'])
@@ -212,6 +215,13 @@ def unshare():
         g.db.commit()
         flash('Image unshared')
         return redirect(url_for('show_image', id=image_id))
+    else:
+        return redirect(url_for('no_way'))
+
+
+@app.route('/no_way', methods=['GET'])
+def no_way():
+    return render_template('no_way.html')
 
 
 @app.route('/add_comment', methods=['POST'])
