@@ -1,5 +1,7 @@
 import os
 import sqlite3
+import string
+import random
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
 import werkzeug
@@ -48,9 +50,9 @@ def create():
         elif request.form['password'] == "":
             error = 'Password needed'
         else:
-            session['logged_in'] = True
-            g.db.execute('insert into user (username, password) values (?, ?)',
-                         [request.form['username'], request.form['password']])
+            token = token_generator()
+            g.db.execute('insert into user (username, password, token) values (?, ?, ?)',
+                         [request.form['username'], request.form['password'], token])
             g.db.commit()
 
             flash('Successfully created - You can now login')
@@ -65,14 +67,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        cur = g.db.execute('select id from user where username = (?) and password = (?)', [username, password])
-        userid = [dict(id=row[0]) for row in cur.fetchall()]
+        cur = g.db.execute('select token from user where username = (?) and password = (?)', [username, password])
+        user_token = [dict(token=row[0]) for row in cur.fetchall()]
 
-        if len(userid) == 0:
+        if len(user_token) == 0:
             error = 'Invalid username or password'
         else:
             session['logged_in'] = True
-            session['user_id'] = userid[0].get('id')
+            session['token'] = user_token[0].get('token')
             flash('You were logged in')
             return redirect(url_for('profile'))
     return render_template('login.html', error=error)
@@ -81,7 +83,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    session.pop('user_id', None)
+    session.pop('token', None)
     flash('You were logged out')
     return redirect(url_for('index'))
 
@@ -109,8 +111,10 @@ def upload():
         if file and allowed_file(file.filename):
             filename = werkzeug.secure_filename(file.filename)
 
+            user_id = get_userid_by_token(session.get('token'))
+
             g.db.execute('insert into images (image, user_id, filename) values (?, ?, ?)',
-                         (buffer(file.read()), session['user_id'], filename))
+                         (buffer(file.read()), user_id, filename))
             g.db.commit()
 
             flash('uploaded image: %s' % (filename))
@@ -130,7 +134,7 @@ def blob_to_image(filename, ablob):
 
 @app.route('/profile', methods=['GET'])
 def profile():
-    id = session.get('user_id')
+    id = get_userid_by_token(session.get('token'))
 
     cur = g.db.execute('select id, image, filename from images where user_id = (?)', [id])
     images = [dict(image_id=row[0], image=blob_to_image(row[2], row[1])) for row in cur.fetchall()]
@@ -143,26 +147,31 @@ def profile():
 
 @app.route('/showimage/<id>/', methods=['GET'])
 def show_image(id):
-    cur = g.db.execute('select image, filename from images where id = (?)', [id])
-    img = [dict(filename=row[1], image=blob_to_image(row[1], row[0])) for row in cur.fetchall()]
+    cur = g.db.execute('select image, filename, user_id from images where id = (?)', [id])
+    img = [dict(filename=row[1], image=blob_to_image(row[1], row[0]), user_id=row[2]) for row in cur.fetchall()]
 
     cur = g.db.execute('select id, username from user')
     usr = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
 
+    user_id = get_userid_by_token(session.get('token'))
+
     cur = g.db.execute(
-        'select share.id, user.username from share inner join user on user.id == share.to_id where from_id = (?)',
-        [session.get('user_id')])
-    share = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
+        'select share.id, user.username, share.to_id from share inner join user on user.id == share.to_id where from_id = (?)',
+        [user_id])
+    share = [dict(id=row[0], username=row[1], to_id=row[2]) for row in cur.fetchall()]
 
-    cur = g.db.execute('select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)', [id])
-    comments = [dict(username=row[0], comment=row[1]) for row in cur.fetchall()]
+    if img[0].get('user_id') == user_id or (len(share) > 0 and user_id == share[0].get('from_id')):
+        cur = g.db.execute('select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)', [id])
+        comments = [dict(username=row[0], comment=row[1]) for row in cur.fetchall()]
 
-    return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments)
-
+        return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments)
+    else:
+        return 'No way!!'
 
 @app.route('/shareimage', methods=['POST'])
 def share_image():
     if request.method == 'POST':
+        #TODO: Needs to check who can share
         image_id = request.form['imageid']
         userid = request.form['userid']
 
@@ -189,8 +198,9 @@ def unshare():
 @app.route('/add_comment', methods=['POST'])
 def add_comment():
     if request.method == 'POST':
+        # TODO: needs to check for access
         image_id = request.form['imageid']
-        userid = session.get('user_id')
+        userid = get_userid_by_token(session.get('token'))
         comment = request.form['text']
 
         g.db.execute('insert into comments (user_id, image_id, comment) values (?, ?, ?)',
@@ -200,6 +210,23 @@ def add_comment():
 
         return redirect(url_for('show_image', id=image_id))
 
+
+def token_generator(size=32, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def get_userid_by_token(token):
+    cur = g.db.execute('select id from user where token = (?)', [token])
+    rows = [dict(id=row[0]) for row in cur.fetchall()]
+    return rows[0].get('id')
+
+@app.route('/test')
+def test():
+    token = 'Vzcv3PLtO8KoxREsCvPaVlPFTjK939Dz'
+
+    print get_userid_by_token(token)
+
+    return ''
 
 if __name__ == '__main__':
     app.run()
