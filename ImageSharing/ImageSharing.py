@@ -47,8 +47,10 @@ def create():
     if request.method == 'POST':
         if request.form['username'] == "":
             error = 'Username needed'
-        elif request.form['password'] == "":
+        elif request.form['password'] == "" or request.form['repassword'] == "":
             error = 'Password needed'
+        elif request.form['password'] != request.form['repassword']:
+            error = 'Password is not the same as the retyped'
         else:
             token = token_generator()
             g.db.execute('insert into user (username, password, token) values (?, ?, ?)',
@@ -101,7 +103,7 @@ def add_entry():
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -147,36 +149,53 @@ def profile():
 
 @app.route('/showimage/<id>/', methods=['GET'])
 def show_image(id):
-    cur = g.db.execute('select image, filename, user_id from images where id = (?)', [id])
-    img = [dict(filename=row[1], image=blob_to_image(row[1], row[0]), user_id=row[2]) for row in cur.fetchall()]
-
-    cur = g.db.execute('select id, username from user')
-    usr = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
-
     user_id = get_userid_by_token(session.get('token'))
+    if has_permission(id, user_id):
+        cur = g.db.execute('select image, filename, user_id from images where id = (?)', [id])
+        img = [dict(filename=row[1], image=blob_to_image(row[1], row[0]), user_id=row[2]) for row in cur.fetchall()]
 
-    cur = g.db.execute(
-        'select share.id, user.username, share.to_id from share inner join user on user.id == share.to_id where from_id = (?)',
-        [user_id])
-    share = [dict(id=row[0], username=row[1], to_id=row[2]) for row in cur.fetchall()]
+        cur = g.db.execute('select id, username from user')
+        usr = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
 
-    if img[0].get('user_id') == user_id or (len(share) > 0 and user_id == share[0].get('from_id')):
+        cur = g.db.execute(
+            'select share.id, user.username from share inner join user on user.id == share.to_id where from_id = (?) and share.image_id = (?)',
+            [user_id, id])
+        share = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
+
         cur = g.db.execute('select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)', [id])
         comments = [dict(username=row[0], comment=row[1]) for row in cur.fetchall()]
 
-        return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments)
+        return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments, owner=img[0].get('user_id')==user_id)
     else:
         return 'No way!!'
+
+
+def has_permission(img_id, user_id):
+    cur = g.db.execute('select user_id from images where id = (?)', [img_id])
+    img_user_id = [dict(user_id=row[0]) for row in cur.fetchall()]
+
+    if user_id == img_user_id[0].get('user_id'):
+        return True
+
+    cur = g.db.execute(
+        'select id from share where image_id = (?) and to_id = (?)',
+        [img_id, user_id])
+    share = [dict(id=row[0]) for row in cur.fetchall()]
+
+    if len(share) > 0:
+        return True
+    return False
+
 
 @app.route('/shareimage', methods=['POST'])
 def share_image():
     if request.method == 'POST':
         #TODO: Needs to check who can share
         image_id = request.form['imageid']
-        userid = request.form['userid']
+        to_userid = request.form['userid']
 
         g.db.execute('insert into share (image_id, to_id, from_id) values (?, ?, ?)',
-                     [image_id, userid, session.get('user_id')])
+                     [image_id, to_userid, get_userid_by_token(session.get('token'))])
         g.db.commit()
         flash('Image shared')
         return redirect(url_for('show_image', id=image_id))
@@ -222,9 +241,6 @@ def get_userid_by_token(token):
 
 @app.route('/test')
 def test():
-    token = 'Vzcv3PLtO8KoxREsCvPaVlPFTjK939Dz'
-
-    print get_userid_by_token(token)
 
     return ''
 
