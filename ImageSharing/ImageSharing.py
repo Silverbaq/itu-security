@@ -5,6 +5,7 @@ import random
 from flask import Flask, request, session, g, redirect, url_for, \
     abort, render_template, flash
 import werkzeug
+import hashlib
 
 # configuration
 DATABASE = './tmp/database.db'
@@ -53,13 +54,20 @@ def create():
         elif request.form['password'] != request.form['repassword']:
             error = 'Password is not the same as the retyped'
         else:
-            token = token_generator()
-            g.db.execute('insert into user (username, password, token) values (?, ?, ?)',
-                         [request.form['username'], request.form['password'], token])
-            g.db.commit()
+            cur = g.db.execute('select username from user where username = (?)', [request.form['username']])
+            u = [dict(password=row[0]) for row in cur.fetchall()]
+            if len(u) == 0:
+                s = os.urandom(5).encode('hex')
+                sha = hashlib.sha512(s + request.form['password']).hexdigest()
+                token = token_generator()
+                g.db.execute('insert into user (username, password, token) values (?, ?, ?)',
+                             [request.form['username'], s + ':' + sha, token])
+                g.db.commit()
 
-            flash('Successfully created - You can now login')
-            return redirect(url_for('login'))
+                flash('Successfully created - You can now login')
+                return redirect(url_for('login'))
+            else:
+                error = 'Username is taken'
     return render_template('create.html', error=error)
 
 
@@ -70,16 +78,25 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        cur = g.db.execute('select token from user where username = (?) and password = (?)', [username, password])
-        user_token = [dict(token=row[0]) for row in cur.fetchall()]
-
-        if len(user_token) == 0:
+        cur = g.db.execute('select password from user where username = (?)', [username])
+        pass_db = [dict(password=row[0]) for row in cur.fetchall()]
+        if pass_db[0].get('password') is None:
             error = 'Invalid username or password'
-        else:
+            return render_template('login.html', error=error)
+        p = pass_db[0].get('password').split(':')
+
+        if p[1] == hashlib.sha512(p[0]+password).hexdigest():
+            token = token_generator()
+            g.db.execute('update user set token = (?) where username = (?)',
+                         [token, username])
+            g.db.commit()
+
             session['logged_in'] = True
-            session['token'] = user_token[0].get('token')
+            session['token'] = token
             flash('You were logged in')
             return redirect(url_for('profile'))
+        else:
+            error = 'Invalid username or password'
     return render_template('login.html', error=error)
 
 
@@ -142,7 +159,9 @@ def profile():
     cur = g.db.execute('select id, image, filename from images where user_id = (?)', [id])
     images = [dict(image_id=row[0], image=blob_to_image(row[2], row[1])) for row in cur.fetchall()]
 
-    cur = g.db.execute('select images.id, images.image, images.filename from images inner join share on images.id = share.image_id where share.to_id = (?)', [id])
+    cur = g.db.execute(
+        'select images.id, images.image, images.filename from images inner join share on images.id = share.image_id where share.to_id = (?)',
+        [id])
     shared_images = [dict(image_id=row[0], image=blob_to_image(row[2], row[1])) for row in cur.fetchall()]
 
     return render_template('profile.html', images=images, shared_images=shared_images)
@@ -163,10 +182,13 @@ def show_image(id):
             [user_id, id])
         share = [dict(id=row[0], username=row[1]) for row in cur.fetchall()]
 
-        cur = g.db.execute('select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)', [id])
+        cur = g.db.execute(
+            'select user.username, comments.comment from user inner join comments on user.id == comments.user_id where comments.image_id = (?)',
+            [id])
         comments = [dict(username=row[0], comment=row[1]) for row in cur.fetchall()]
 
-        return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments, owner=img[0].get('user_id')==user_id)
+        return render_template('image.html', imageid=id, image=img, usernames=usr, shares=share, comments=comments,
+                               owner=img[0].get('user_id') == user_id)
     else:
         return redirect(url_for('no_way'))
 
@@ -195,8 +217,6 @@ def share_image():
         to_userid = request.form['userid']
 
         if has_permission(image_id, get_userid_by_token(session.get('token'))):
-
-
             g.db.execute('insert into share (image_id, to_id, from_id) values (?, ?, ?)',
                          [image_id, to_userid, get_userid_by_token(session.get('token'))])
             g.db.commit()
@@ -249,10 +269,11 @@ def get_userid_by_token(token):
     rows = [dict(id=row[0]) for row in cur.fetchall()]
     return rows[0].get('id')
 
+
 @app.route('/test')
 def test():
-
     return ''
+
 
 if __name__ == '__main__':
     app.run()
