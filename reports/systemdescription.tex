@@ -39,7 +39,8 @@ Describe the system's mission,  the system boundaries,
 and the overall system architecture, including the main subsystems and
 their relationships.   This description should provide a high-level
 overview of the system, e.g., suitable for managers, that complements
-the more technical description that follows.
+the more technical description that follows.Hi this is a report
+bla bla
 
 
 \subsection{System Functionality}
@@ -47,20 +48,21 @@ the more technical description that follows.
 As described in the project description, the system implements the main requirements, namely:
 
 \begin{enumerate}
-\item upload pictures 
+\item the system should allow the user to upload pictures 
 \item the user can share his own pictures with other named users on a picture-by-picture basis
 \item the user can view his own pictures and pictures other has shared with him
 \item the user can comment on any picture he can view
 \item and the user can view comments on any picture he can view  
 \end{enumerate}
 
+
     
 
 \subsection{Components and Subsystems}
-
-List all system components, subdivided, for example, into
+The system is based on the Flask micro framework which is written in Python. Flask is using Jinja to generate html which is sanityzing the fields that comes from the outside world. 
+(List all system components, subdivided, for example, into
   categories such as platforms, applications, data records, etc. For
-  each component, state its relevant properties.
+  each component, state its relevant properties.)
 
 
 \subsection{Interfaces}
@@ -109,11 +111,11 @@ List all potential threats and the
 Impact & Description \\
 \hline
 \hline
-High   & \hspace*{20pt}\ldots \\
+High   & The system does not responding and or user data is compromised \\
 \hline
-Medium & \hspace*{20pt}\ldots \\
+Medium & High response time \\
 \hline
-Low   & \hspace*{20pt}\ldots \\
+Low   & the system is temporary out of service\\
 \hline
 \end{tabular}
 %
@@ -159,10 +161,10 @@ Low   & \hspace*{20pt}\ldots \\
 Evaluate the likelihood, impact and the resulting risk,  after implementation of the corresponding countermeasures. For each threat, clearly name the threat source and the the threat action.
 
 \begin{footnotesize}
-\begin{prettytablex}{lXp{6.5cm}lll}
-No. & Threat & Implemented/planned countermeasure(s) & L & I & Risk \\
+\begin{prettytablex}{lXp{3.5cm}lll}
+No. & Threat & Implemented /planned countermeasure(s) & L & I & Risk \\
 \hline
-1 & ... & ... & {\it Low} & {\it Low} & {\it Low} \\
+1 & release of personal information  &  using hash and salted password & {\it Low} & {\it Low} & {\it Low} \\
 \hline
 2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
 \hline
