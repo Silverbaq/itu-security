@@ -36,13 +36,9 @@
 \section{System Characterization}
 
 \subsection{System Overview}
-The mission for the server is to host a web application, where users can upload there images, and share them with each other. The users has the power to choose who they wish to share there images with, and also if they would like to unshare an image with another user. When an user uploads an image, we own that image, therefore the user cannot delete or remove the image from the web application. \\
-
-The server is a Unix-based system, build on Ubuntu 14.04. It has a bare minimum of users on the server, since there should only be one for maintaining the services running on the system.\\
-
-
-This web application, is set to start-up as soon as the server is booted. This is expected to be the best case, since the main purpose of the service, is to host this application. So in case of failure where the system reboots (E.g. power out, or a like), it will be available again as soon as possible, without having personal to start up the application manually.\\
-
+The mission for the server is to host a web application, where users can upload their images, and share them with each other. The users have the power to choose who they wish to share their images with, and also if they would like to unshare an image with another user. When a user uploads an image, we own that image, therefore, the user cannot delete or remove the image from the web application.\\ \\
+The server is a Unix-based system, build on Ubuntu 14.04. It has a bare minimum of users on the server since there should only be one for maintaining the services running on the system.\\ \\
+This web application is set to start-up as soon as the server is booted. This is expected to be the best case, since the main purpose of the service, is to host this application. So in case of failure where the system reboots (E.g. power out, or alike), it will be available again as soon as possible, without having personal to start up the application manually.\\ \\
 The server is also set-up so that it can be accessed remotely. This is for maintenance reasons, and will require the proper use of login and password for gaining access.
 For sending files to and from the server, this should happen within the encrypted connection services running on the server, and not by additional software.
 
@@ -85,31 +81,26 @@ Specify  all interfaces and  information flows, from the technical as well as fr
   organizational point of view.
 
 \subsection{Backdoors}
-Easy to find: 
-Netcat is running on port 60606. This makes it possible to make remote access to the service through this port.\\
-
-The reason for putting the port number in the higher numbers, is first of all that the first 1024 ports are “well-known” ports.  Meaning that they have been defined to serve a purpose. E.g. 80 is HTTP, 443 is HTTPS, 666 is Doom. If the user makes a nmap scan on the system, these are the port the scanner will look for by default. This meaning that if someone wish to find this backdoor, they will need to specify the search a bit.\\
-
+\textbf{Easy to find:}\\ 
+Netcat is running on port 60606. This makes it possible to make remote access to the service through this port.\\ \\
+The reason for putting the port number in the higher numbers, is first of all that the first 1024 ports are “well-known” ports.  Meaning that they have been defined to serve a purpose. E.g. 80 is HTTP, 443 is HTTPS, 666 is Doom. If the user makes a nmap scan on the system, these are the port the scanner will look for by default. This meaning that if someone wish to find this backdoor, they will need to specify the search a bit.\\ \\
 To find that this is the case, you can do several things.
 \begin{itemize}
-\item Nmap: To find this with nmap 
-Command: nmap -p “*”
-\item	Netstat: With netstat, it is possiable to see all the activity 
-Command:
-\end{itemize}
-
-Hard to find: 
+\item Nmap: To find this with nmap:\\
+\textit{Command:} nmap 192.168.1.10 -p 1-65535
+\item	Netstat: With netstat, it is possiable to see all the activity:\\
+\textit{Command:} sudo netstat -plunt
+\end{itemize} 
+\ \\
+\textbf{Hard to find:}
 \begin{itemize}
 \item Ubuntu 14.04 has an overlayfs vulnerability (CVE-2015-8660). The code to use for this exploit can be found at: https://www.exploit-db.com/exploits/39166/ - This will give local root access.
 \end{itemize}
-
-To perform the exploit, do the following:
-We have compiled the exploit, and placed it under the /bin/pwn. This means that if someone on the system calls the command “pwn” from anywhere on the system, the user will gain root access. \\
-
-For the fun of it, we have made a user with a low amount of privileges on the system. The username is admin, which have been given a password from the top 500 most used passwords. It should therefore be fairly easy to bruteforce the password. \\
-
-So if/when this user has been cracked, someone can login to the server with SSH, call the command pwn – And bingo! Root access…\\*
-
+\ \\
+To perform the exploit, do the following:\\
+We have compiled the exploit, and placed it under the /bin/pwn. This means that if someone on the system calls the command “pwn” from anywhere on the system, the user will gain root access. \\ \\
+For the fun of it, we have made a user with a low amount of privileges on the system. The username is admin, which have been given a password from the top 500 most used passwords. It should therefore be fairly easy to bruteforce the password. \\ \\
+So if/when this user has been cracked, someone can login to the server with SSH, call the command pwn – And bingo! Root access…\\ \\
 Something to note:
 With the web application, it is possible to upload files, as long as the file extension is of an image sort. This means that it is possible to upload any kind of data to the server since it’s only the naming of the file that makes a difference, and not the content of the file. 
 
