@@ -1,0 +1,136 @@
+\section{Risk Analysis and Security Measures}
+
+\subsection{Assets}
+
+Describe the relevant assets and their required security
+  properties. For example, data objects, access restrictions,
+  configurations, etc.
+
+\subsection{Threat Sources}
+
+Name and describe potential threat sources including their motivation.
+
+\subsection{Risks and Countermeasures}
+
+List all potential threats and the
+  corresponding countermeasures. Estimate the risk based on 
+  the information about the threat, the threat sources and the 
+  corresponding countermeasure. For this purpose, use the following three
+  tables.
+
+%\subsubsection{Tools}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{\bf Impact} \\
+\hline
+Impact & Description \\
+\hline
+\hline
+High & Complete shutdown of the system, \\
+     & user data is compromised, \\
+     & apocalypse and a major loss in asset value,\\
+     & complete loss of the customers confidence, \\
+     
+\hline
+Medium & High response time \\
+\hline
+Low   & the system is temporary out of service\\
+\hline
+\end{tabular}
+%
+%\vspace{5mm}
+%
+%\noindent \hspace*{10pt}
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{2}{|c|}{\bf Likelihood} \\
+\hline
+Likelihood & Description \\
+\hline
+\hline
+High   & \hspace*{20pt}\ldots \\
+\hline
+Medium & \hspace*{20pt}\ldots \\
+\hline
+Low   & \hspace*{20pt}\ldots \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{5mm}
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{4}{|c|}{{\bf Risk Level}} \\
+\hline
+{{\bf Likelihood}} & \multicolumn{3}{c|}{{\bf Impact}} \\ %\cline{2-4}
+     & Low & Medium & High \\  \hline
+ High & Low & Medium & High  \\
+\hline
+ Medium & Low & Medium & Medium \\
+\hline
+ Low & Low & Low & Low \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{{\it Evaluation Asset X}}
+
+Evaluate the likelihood, impact and the resulting risk,  after implementation of the corresponding countermeasures. For each threat, clearly name the threat source and the the threat action.
+
+\begin{footnotesize}
+\begin{prettytablex}{lXp{3.5cm}lll}
+No. & Threat & Implemented /planned countermeasure(s) & L & I & Risk \\
+\hline
+1 & release of personal information  &  using hash and salted password & {\it Low} & {\it Low} & {\it Low} \\
+\hline
+2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
+\hline
+\end{prettytablex}
+\end{footnotesize}
+
+
+
+\subsubsection{{\it Evaluation Asset y}}
+
+\begin{footnotesize}
+\begin{prettytablex}{lXp{6.5cm}lll}
+No. & Threat & Implemented/planned countermeasure(s) & L & I & Risk \\
+\hline
+1 & ... & ... & {\it Low} & {\it Low} & {\it Low} \\
+\hline
+2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
+\hline
+\end{prettytablex}
+\end{footnotesize}
+
+\subsubsection{Detailed Description of Selected Countermeasures}
+
+Optionally explain the details of the countermeasures mentioned above.
+
+
+
+\subsubsection{Risk Acceptance}
+
+List all medium and high risks, according to the evaluation above. For each risk, propose additional countermeasures that could be implemented to further reduce the risks.
+
+\begin{footnotesize}
+\begin{prettytablex}{p{2cm}X}
+No. of threat & Proposed countermeasure including expected impact  \\
+\hline
+... & ... \\
+\hline
+... & ... \\
+\hline
+\end{prettytablex}
+\end{footnotesize}
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../../book"
+%%% End: 

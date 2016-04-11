@@ -14,8 +14,9 @@
 
 
 \title{\huge\sffamily\bfseries System Description and Risk Analysis}
-\author{Malik Bekkouche \and Oscar Felipe Toro \and Steffen Mogensen \and Ömer Yumer}
-\date{\dots}
+ 
+\author{Malik Bekkouche \and Oscar Felipe Toro \and Steffen Mogensen \and  Yumer Adem Yumer}
+\date{\today}
 
 
 \begin{document}
@@ -34,13 +35,15 @@
 \section{System Characterization}
 
 \subsection{System Overview}
+The mission for the server is to host a web application, where users can upload there images, and share them with each other. The users has the power to choose who they wish to share there images with, and also if they would like to unshare an image with another user. When an user uploads an image, we own that image, therefor the user cannot delete or remove the image from the web application. \\
 
-Describe the system's mission,  the system boundaries,
-and the overall system architecture, including the main subsystems and
-their relationships.   This description should provide a high-level
-overview of the system, e.g., suitable for managers, that complements
-the more technical description that follows.Hi this is a report
+The server is a Unix-based system, build on Ubuntu 14.04. It has a bare minimum of users on the server, since there should only be one for maintaining the services running on the system.\\
 
+
+This web application, is set to start-up as soon as the server is booted. This is expected to be the best case, since the main purpose of the service, is to host this application. So in case of failure where the system reboots (E.g. power out, or a like), it will be available again as soon as possible, without having personal to start up the application manually.\\
+
+The server is also setup so that it can be accessed remotely. This is for the reason of maintenance, and will require the proper use of login and password for gaining access.
+For sending files to and from the server, this should happen within the encrypted connection services running on the server, and not by additional software.
 
 
 \subsection{System Functionality}
@@ -62,7 +65,14 @@ The system is based on the Flask micro framework which is written in Python. Fla
 (List all system components, subdivided, for example, into
   categories such as platforms, applications, data records, etc. For
   each component, state its relevant properties.)
+  
+\begin{itemize}
+\item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server is SimpleHTTPServer, that is a part of the python standard library.
 
+\item Database: SQLite3 is used as storage of users for the web application, and all the content that is in addition with it. This means that there is no daemon running, since everything is stored in the same file. To access and manipulation of the database, it is needed to have access to this file. This means that for altering, 
+
+\item SSH: Open-SSH is installed on the system, this is so it is possible for a system administrator to connect to the system and do any configuration that is necessary, without having to be in front of the machine. This also means that scp is available for uploading and downloading files to the server. 
+\end{itemize}
 
 \subsection{Interfaces}
 
@@ -70,155 +80,43 @@ Specify  all interfaces and  information flows, from the technical as well as fr
   organizational point of view.
 
 \subsection{Backdoors}
+Easy to find: 
+Netcat is running on port 60606. This makes it possible to make remote access to the service through this port.\\
 
-Describe the implemented backdoors. {\bfseries Do not add
-    this section to the version of your report that is handed over to
-    the team that reviews your system!}
+The reason for putting the port number in the higher numbers, is first of all that the first 1024 ports are “well-known” ports.  Meaning that they have been defined to serve a purpose. E.g. 80 is HTTP, 443 is HTTPS, 666 is Doom. If the user makes a nmap scan on the system, these are the port the scanner will look for by default. This meaning that if someone wish to find this backdoor, they will need to specify the search a bit.\\
+
+To find that this is the case, you can do several things.
+\begin{itemize}
+\item Nmap: To find this with nmap 
+Command: nmap -p “*”
+\item	Netstat: With netstat, it is possiable to see all the activity 
+Command:
+\end{itemize}
+
+Hard to find: 
+\begin{itemize}
+\item Ubuntu 14.04 has an overlayfs vulnerability (CVE-2015-8660). The code to use for this exploit can be found at: https://www.exploit-db.com/exploits/39166/ - This will give local root access.
+\end{itemize}
+
+To perform the exploit, do the following:
+We have compiled the exploit, and placed it under the /bin/pwn. This means that if someone on the system calls the command “pwn” from anywhere on the system, the user will gain root access. \\
+
+For the fun of it, we have made a user with a low amount of privileges on the system. The username is admin, which have been given a password from the top 500 most used passwords. It should therefore be fairly easy to bruteforce the password. \\
+
+So if/when this user has been cracked, someone can login to the server with SSH, call the command pwn – And bingo! Root access…\\*
+
+Something to note:
+With the web application, it is possible to upload files, as long as the file extension is of an image sort. This means that it is possible to upload any kind of data to the server since it’s only the naming of the file that makes a difference, and not the content of the file. 
+
+
 
 \subsection{Additional Material}
 
 You may have additional sections according to your needs.
 
 
-\section{Risk Analysis and Security Measures}
+\input{systemdescription2.tex}
 
-\subsection{Assets}
-
-Describe the relevant assets and their required security
-  properties. For example, data objects, access restrictions,
-  configurations, etc.
-
-\subsection{Threat Sources}
-
-\begin{enumerate}
-
-
-\item \textit{Employees} : the only employee in our tiny company consist of a system administrator (Steffen) who has access to the server,he could possibly leak sensitive information intentionally or unintentionally.
-\item \textit{Hackers} : since the system is connected to internet,it is exposed to various attacks,the attackers vary from highly motivated people with good skills actively trying to penetrate the system to script kidies just messing around.
-\item \textit{Malware} : as any it system, malware could possibly be a problem, it could be directed malware (unlikely) or undirected malware (more likely).
-\end{enumerate}
-\subsection{Risks and Countermeasures}
-
-List all potential threats and the
-  corresponding countermeasures. Estimate the risk based on 
-  the information about the threat, the threat sources and the 
-  corresponding countermeasure. For this purpose, use the following three
-  tables.
-
-%\subsubsection{Tools}
-
-\begin{center}
-\begin{tabular}{|l|l|}
-\hline
-\multicolumn{2}{|c|}{\bf Impact} \\
-\hline
-Impact & Description \\
-\hline
-\hline
-High & Complete shutdown of the system, \\
-     & user data is compromised, \\
-     & apocalypse and a major loss in asset value,\\
-     & complete loss of the customers confidence, \\
-     
-\hline
-Medium & High response time \\
-	   & loss in asset value \\	
-\hline
-Low   & relatively affect the credibility of the company,\\
-	  & lower the customers confidence and a relative loss in asset value\\
-\hline
-\end{tabular}
-%
-%\vspace{5mm}
-%
-%\noindent \hspace*{10pt}
-\begin{tabular}{|l|l|}
-\hline
-\multicolumn{2}{|c|}{\bf Likelihood} \\
-\hline
-Likelihood & Description \\
-\hline
-\hline
-High   & the threat source has the power to exploit vulnerabilities in the system,\\
-	   & the countermeasures are inexistant or ineffective \\
-\hline
-Medium & the threat source is motivated,\\
-& some countermeasures are implemented which may prevent them to do harm  \\
-\hline
-Low   & the countermeasures are completely effective,\\
-&(almost) nothing to worry about  \\
-\hline
-\end{tabular}
-\end{center}
-
-\vspace{5mm}
-
-\begin{center}
-\begin{tabular}{|l|c|c|c|}
-\hline
-\multicolumn{4}{|c|}{{\bf Risk Level}} \\
-\hline
-{{\bf Likelihood}} & \multicolumn{3}{c|}{{\bf Impact}} \\ %\cline{2-4}
-     & Low & Medium & High \\  \hline
- High & Low & Medium & High  \\
-\hline
- Medium & Low & Medium & Medium \\
-\hline
- Low & Low & Low & Low \\
-\hline
-\end{tabular}
-\end{center}
-
-\subsubsection{{\it Evaluation Asset X}}
-
-Evaluate the likelihood, impact and the resulting risk,  after implementation of the corresponding countermeasures. For each threat, clearly name the threat source and the the threat action.
-
-\begin{footnotesize}
-\begin{prettytablex}{lXp{3.5cm}lll}
-No. & Threat & Implemented /planned countermeasure(s) & L & I & Risk \\
-\hline
-1 & release of personal information  &  using hash and salted password & {\it Low} & {\it Low} & {\it Low} \\
-\hline
-2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
-\hline
-\end{prettytablex}
-\end{footnotesize}
-
-
-
-\subsubsection{{\it Evaluation Asset y}}
-
-\begin{footnotesize}
-\begin{prettytablex}{lXp{6.5cm}lll}
-No. & Threat & Implemented/planned countermeasure(s) & L & I & Risk \\
-\hline
-1 & ... & ... & {\it Low} & {\it Low} & {\it Low} \\
-\hline
-2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
-\hline
-\end{prettytablex}
-\end{footnotesize}
-
-\subsubsection{Detailed Description of Selected Countermeasures}
-
-Optionally explain the details of the countermeasures mentioned above.
-
-
-
-\subsubsection{Risk Acceptance}
-
-List all medium and high risks, according to the evaluation above. For each risk, propose additional countermeasures that could be implemented to further reduce the risks.
-
-\begin{footnotesize}
-\begin{prettytablex}{p{2cm}X}
-No. of threat & Proposed countermeasure including expected impact  \\
-\hline
-x & Allowing users only 3 attempts \\
-\hline
-... & ... \\
-\hline
-\end{prettytablex}
-\end{footnotesize}
 
 \end{document}
 
