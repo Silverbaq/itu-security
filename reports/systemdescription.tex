@@ -92,10 +92,10 @@ The reason for putting the port number in the higher numbers, is first of all th
 
 To find that this is the case, you can do several things.
 \begin{itemize}
-\item Nmap: To find this with nmap 
-Command: nmap -p “*”
-\item	Netstat: With netstat, it is possiable to see all the activity 
-Command:
+\item Nmap: To find this with nmap\\
+Command: nmap -T5 192.168.1.10 -p 1-65535
+\item	Netstat: With netstat, it is possiable to see all the activity\\
+Command: sudo netstat -plunt
 \end{itemize}
 
 Hard to find: 
