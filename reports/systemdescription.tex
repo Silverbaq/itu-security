@@ -35,20 +35,20 @@
 \section{System Characterization}
 
 \subsection{System Overview}
-The mission for the server is to host a web application, where users can upload there images, and share them with each other. The users has the power to choose who they wish to share there images with, and also if they would like to unshare an image with another user. When an user uploads an image, we own that image, therefor the user cannot delete or remove the image from the web application. \\
+The mission for the server is to host a web application, where users can upload there images, and share them with each other. The users has the power to choose who they wish to share there images with, and also if they would like to unshare an image with another user. When an user uploads an image, we own that image, therefore the user cannot delete or remove the image from the web application. \\
 
 The server is a Unix-based system, build on Ubuntu 14.04. It has a bare minimum of users on the server, since there should only be one for maintaining the services running on the system.\\
 
 
 This web application, is set to start-up as soon as the server is booted. This is expected to be the best case, since the main purpose of the service, is to host this application. So in case of failure where the system reboots (E.g. power out, or a like), it will be available again as soon as possible, without having personal to start up the application manually.\\
 
-The server is also setup so that it can be accessed remotely. This is for the reason of maintenance, and will require the proper use of login and password for gaining access.
+The server is also set-up so that it can be accessed remotely. This is for maintenance reasons, and will require the proper use of login and password for gaining access.
 For sending files to and from the server, this should happen within the encrypted connection services running on the server, and not by additional software.
 
 
 \subsection{System Functionality}
 
-As described in the project description, the system implements the main requirements, namely:
+As originally stated in the project description, the system implements the main requirements, namely:
 
 \begin{enumerate}
 \item the system should allow the user to upload pictures 
@@ -61,15 +61,20 @@ As described in the project description, the system implements the main requirem
 
 
 \subsection{Components and Subsystems}
-The system is based on the Flask micro framework which is written in Python. Flask is using Jinja to generate html which is sanitizing the fields that comes from the outside world. 
-(List all system components, subdivided, for example, into
-  categories such as platforms, applications, data records, etc. For
-  each component, state its relevant properties.)
+
+We recognize mainly two elements of the system, the web application  and the database. Both sitting on top of the Ubuntu Server. In order to connect to the server we are using the OpenSHH suite.
   
 \begin{itemize}
-\item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server is SimpleHTTPServer, that is a part of the python standard library.
+\item Platform: the virtual machine is running Ubuntu Server 14.04.01 which is the Long Term Support version of the server.
+
+
+\item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server is \\SimpleHTTPServer, that is a part of the python standard library. The framework offer inbuilt security features, such as sanitisation of fields and it only offers the minimum building blocks which http server, micro framework, only the minimum 
 
 \item Database: SQLite3 is used as storage of users for the web application, and all the content that is in addition with it. This means that there is no daemon running, since everything is stored in the same file. To access and manipulation of the database, it is needed to have access to this file. This means that for altering, 
+\end{itemize}
+\begin{itemize}
+
+
 
 \item SSH: Open-SSH is installed on the system, this is so it is possible for a system administrator to connect to the system and do any configuration that is necessary, without having to be in front of the machine. This also means that scp is available for uploading and downloading files to the server. 
 \end{itemize}
