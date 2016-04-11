@@ -4,7 +4,7 @@
 \usepackage{alltt}
 \usepackage{url}
 \usepackage{tabularx}
-%\usepackage{ngerman}
+\usepackage[utf8]{inputenc}
 \usepackage{longtable}
 \usepackage{color}
 
@@ -14,7 +14,7 @@
 
 
 \title{\huge\sffamily\bfseries System Description and Risk Analysis}
-\author{w \and x \and y \and z}
+\author{Malik Bekkouche \and Oscar Felipe Toro \and Steffen Mogensen \and Ömer Yumer}
 \date{\dots}
 
 
@@ -56,7 +56,6 @@ As described in the project description, the system implements the main requirem
 \end{enumerate}
 
 
-    
 
 \subsection{Components and Subsystems}
 The system is based on the Flask micro framework which is written in Python. Flask is using Jinja to generate html which is sanitizing the fields that comes from the outside world. 
@@ -112,11 +111,10 @@ Impact & Description \\
 \hline
 \hline
 High & Complete shutdown of the system, \\
-     & user data is compromised \\
-     & apocalypse and a major loss in asset value\\
-     & complete loss of the customers confidence \\
+     & user data is compromised, \\
+     & apocalypse and a major loss in asset value,\\
+     & complete loss of the customers confidence, \\
      
-         
 \hline
 Medium & High response time \\
 \hline
