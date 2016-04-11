@@ -2,9 +2,27 @@
 
 \subsection{Assets}
 
-Describe the relevant assets and their required security
-  properties. For example, data objects, access restrictions,
-  configurations, etc.
+\subsubsection{{\it Physical assets}}
+Server - The web server is located in a virtual machine and is up to date. The administrator is responsible to install all the patches guarantying the proper functionality. 
+Physical access to may allow an adversary to gain control of the system. A server can,
+for example, be booted with a different operating system.
+
+\subsubsection{{\it Logical assets}}
+It includes the operating system, the website, the database, the information related to the users and customer confidence. 
+
+Firewall - The IP table (firewall) of the server is properly configured and restricts access to the server. It keeps track of each connection passing through it and filters all the attempts to connect to the server except through allowed ports. The firewall is kept up-to-date and the administrator installs all security-relevant updates.
+
+\subparagraph{} Website - The website provides the following services - uploading images, sharing them with others user, and posting comments. Only a user authorised for a picture can view, comment or read comments on that picture. No unauthorised user can prevent an image or a comment from being shown to authorised users. The website runs on the web-server which is kept up-to-date. The web developer is responsible for updating the functionality of the website. 
+
+Database - it keeps all the information related to the users, using the website. The username, passwords, pictures are stored on the database. It runs on the server and the access to it is restricted. The administrators is responsible for its maintenance.
+
+Information - all the information related the users is valuable and proper measures are taken to guarantee their confidentiality. The information includes especially the username, password, pictures uploaded by users. 
+
+Pictures - all the uploaded images are kept on the database and are visible to the owner and others allowed by the users. There is no restrictions on the size of the images.
+
+Username and passwords - They identifies the owner of the pictures. All password are saved, using the proper hash functions guarantying the security. 
+
+Customer confidence - since the user can upload private pictures, which should be hidden for the world, user confidence is a important for a successful business relationship.
 
 \subsection{Threat Sources}
 
@@ -12,11 +30,8 @@ Name and describe potential threat sources including their motivation.
 
 \subsection{Risks and Countermeasures}
 
-List all potential threats and the
-  corresponding countermeasures. Estimate the risk based on 
-  the information about the threat, the threat sources and the 
-  corresponding countermeasure. For this purpose, use the following three
-  tables.
+
+
 
 %\subsubsection{Tools}
 
@@ -81,35 +96,86 @@ Low   & the countermeasures are completely effective,(almost) nothing to worry a
 \end{tabular}
 \end{center}
 
-\subsubsection{{\it Evaluation Asset X}}
+\subsubsection{\it Evaluation Asset Firewall}
 
-Evaluate the likelihood, impact and the resulting risk,  after implementation of the corresponding countermeasures. For each threat, clearly name the threat source and the the threat action.
-
-\begin{footnotesize}
-\begin{prettytablex}{lXp{3.5cm}lll}
-No. & Threat & Implemented /planned countermeasure(s) & L & I & Risk \\
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Firewall}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-1 & release of personal information  &  using hash and salted password & {\it Low} & {\it Low} & {\it Low} \\
-\hline
-2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
-\hline
-\end{prettytablex}
-\end{footnotesize}
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                                                                    & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}}                                 & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Malware:\\ Virus/worm spreads \\ over the Internet \\ possibly affects system \\ files and change \\ firewall settings\end{tabular} & \begin{tabular}[c]{@{}l@{}}Proper maintenance of the \\ server, security patches \\ installed, restricted \\ user rights\end{tabular} & Low                    & Medium                 & Low                    \\ \hline
+\end{tabular}
+\end{table}
 
 
+\subsubsection{\it Evaluation Asset Website}
 
-\subsubsection{{\it Evaluation Asset y}}
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Website}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                                                                                                                                        & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}}                                                                                 & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Skilled hacker gains \\ control\\ over the \\ website, steals confidential \\ data, modifies website \\ settings because of \\ vularability either in \\ the server\\ or on \\ the website\end{tabular} & \begin{tabular}[c]{@{}l@{}}The\\ server is \\ hardened and regularly \\ updated. System \\ administrators are \\ trained to notice \\ irregularities on\\ the \\ server.\end{tabular} & Low                    & Medium                 & Low                    \\ \hline
+2                         & \begin{tabular}[c]{@{}l@{}}Script\\ kiddies makes \\ modifications on the\\  website as a result \\ of an attack\end{tabular}                                                                                                      & \begin{tabular}[c]{@{}l@{}}The\\ server is \\ properly maintained, \\ the website is \\ hardened, all input \\ is sanitized\end{tabular}                                              & Low                    & Medium                 & Low                    \\ \hline
+\end{tabular}
+\end{table}
 
-\begin{footnotesize}
-\begin{prettytablex}{lXp{6.5cm}lll}
-No. & Threat & Implemented/planned countermeasure(s) & L & I & Risk \\
+
+\subsubsection{\it Evaluation Asset Database}
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Database}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-1 & ... & ... & {\it Low} & {\it Low} & {\it Low} \\
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                                                                                                               & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}}                      & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Skilled hacker gains \\ control,over the \\ database, steals \\ confidential data, \\ make,changes on \\ the database like \\ deleting tables, \\ editing records\end{tabular} & \begin{tabular}[c]{@{}l@{}}Hardened\\ server and \\ kept up-to-date, \\ use of hashed \\ and salted passwords\end{tabular} & Low                    & High                   & Low                    \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{\it Evaluation Asset Images}
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Images}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                                            & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}} & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Web developer \\ unintentionally breaks \\ confidentiality during \\ the update of the website\end{tabular} & Well trained web developer                                                                            & Low                    & High                   & Low                    \\ \hline
+\end{tabular}
+\end{table}
+
+
+\subsubsection{\it Evaluation Asset Username and Password}
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Username and Password}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
 \hline
-\end{prettytablex}
-\end{footnotesize}
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                   & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}}                       & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Script kiddies try to \\ guess the username \\ and the password\end{tabular}       & \begin{tabular}[c]{@{}l@{}}Advising users not \\ to choose simple \\ usernames\\ and passwords\end{tabular}                 & Medium                 & Medium                 & Medium                 \\ \hline
+2                         & \begin{tabular}[c]{@{}l@{}}Skilled hacker attacks \\ with special software \\ to break passwords\end{tabular} & \begin{tabular}[c]{@{}l@{}}Encryption\\ passwords \\ with strong hash \\ functions choosing \\ arbitrary salts\end{tabular} & Medium                 & High                   & Medium                 \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{\it Evaluation Asset Customer confidence}
+\begin{table}[H]
+\centering
+\caption{Evaluation Asset Customer confidence}
+\label{my-label}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                         & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}} & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Theft of confidential \\ data\end{tabular}               & \begin{tabular}[c]{@{}l@{}}State-of-the-art \\ security measures\end{tabular}                         & Low                    & High                   & Low                    \\ \hline
+2                         & \begin{tabular}[c]{@{}l@{}}Customer unsatisfied \\ of the web services\end{tabular} & Attractive design                                                                                     & Medium                 & High                   & Medium                 \\ \hline
+\end{tabular}
+\end{table}
 
 \subsubsection{Detailed Description of Selected Countermeasures}
 
