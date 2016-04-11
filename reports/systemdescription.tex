@@ -45,18 +45,18 @@ This web application, is set to start-up as soon as the server is booted. This i
 The server is also setup so that it can be accessed remotely. This is for the reason of maintenance, and will require the proper use of login and password for gaining access.
 For sending files to and from the server, this should happen within the encrypted connection services running on the server, and not by additional software.
 
-
 \subsection{System Functionality}
 
 As described in the project description, the system implements the main requirements, namely:
 
 \begin{enumerate}
-\item upload pictures 
+\item the system should allow the user to upload pictures 
 \item the user can share his own pictures with other named users on a picture-by-picture basis
 \item the user can view his own pictures and pictures other has shared with him
 \item the user can comment on any picture he can view
 \item and the user can view comments on any picture he can view  
 \end{enumerate}
+
 
     
 
@@ -64,6 +64,8 @@ As described in the project description, the system implements the main requirem
 
 \begin{itemize}
 \item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server is SimpleHTTPServer, that is a part of the python standard library.
+
+The system is based on the Flask micro framework which is written in Python. Flask is using Jinja to generate html which is sanitizing the fields that comes from the outside world. 
 
 \item Database: SQLite3 is used as storage of users for the web application, and all the content that is in addition with it. This means that there is no daemon running, since everything is stored in the same file. To access and manipulation of the database, it is needed to have access to this file. This means that for altering, 
 
@@ -141,11 +143,16 @@ List all potential threats and the
 Impact & Description \\
 \hline
 \hline
-High   & \hspace*{20pt}\ldots \\
+High & Complete shutdown of the system, \\
+     & user data is compromised \\
+     & apocalypse and a major loss in asset value\\
+     & complete loss of the customers confidence \\
+     
+         
 \hline
-Medium & \hspace*{20pt}\ldots \\
+Medium & High response time \\
 \hline
-Low   & \hspace*{20pt}\ldots \\
+Low   & the system is temporary out of service\\
 \hline
 \end{tabular}
 %
@@ -191,10 +198,10 @@ Low   & \hspace*{20pt}\ldots \\
 Evaluate the likelihood, impact and the resulting risk,  after implementation of the corresponding countermeasures. For each threat, clearly name the threat source and the the threat action.
 
 \begin{footnotesize}
-\begin{prettytablex}{lXp{6.5cm}lll}
-No. & Threat & Implemented/planned countermeasure(s) & L & I & Risk \\
+\begin{prettytablex}{lXp{3.5cm}lll}
+No. & Threat & Implemented /planned countermeasure(s) & L & I & Risk \\
 \hline
-1 & ... & ... & {\it Low} & {\it Low} & {\it Low} \\
+1 & release of personal information  &  using hash and salted password & {\it Low} & {\it Low} & {\it Low} \\
 \hline
 2 & ... & ...& {\it Medium} & {\it High} & {\it Medium} \\
 \hline

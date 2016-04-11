@@ -9,7 +9,7 @@ import hashlib
 
 # configuration
 DATABASE = './tmp/database.db'
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development key'
 
 UPLOAD_FOLDER = './upload'
@@ -276,4 +276,4 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0',port=80)
