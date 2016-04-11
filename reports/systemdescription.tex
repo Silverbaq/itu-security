@@ -90,8 +90,13 @@ Describe the relevant assets and their required security
 
 \subsection{Threat Sources}
 
-Name and describe potential threat sources including their motivation.
+\begin{enumerate}
 
+
+\item \textit{Employees} : the only employee in our tiny company consist of a system administrator (Steffen) who has access to the server,he could possibly leak sensitive information intentionally or unintentionally.
+\item \textit{Hackers} : since the system is connected to internet,it is exposed to various attacks,the attackers vary from highly motivated people with good skills actively trying to penetrate the system to script kidies just messing around.
+\item \textit{Malware} : as any it system, malware could possibly be a problem, it could be directed malware (unlikely) or undirected malware (more likely).
+\end{enumerate}
 \subsection{Risks and Countermeasures}
 
 List all potential threats and the
@@ -117,8 +122,10 @@ High & Complete shutdown of the system, \\
      
 \hline
 Medium & High response time \\
+	   & loss in asset value \\	
 \hline
-Low   & the system is temporary out of service\\
+Low   & relatively affect the credibility of the company,\\
+	  & lower the customers confidence and a relative loss in asset value\\
 \hline
 \end{tabular}
 %
@@ -132,11 +139,14 @@ Low   & the system is temporary out of service\\
 Likelihood & Description \\
 \hline
 \hline
-High   & \hspace*{20pt}\ldots \\
+High   & the threat source has the power to exploit vulnerabilities in the system,\\
+	   & the countermeasures are inexistant or ineffective \\
 \hline
-Medium & \hspace*{20pt}\ldots \\
+Medium & the threat source is motivated,\\
+& some countermeasures are implemented which may prevent them to do harm  \\
 \hline
-Low   & \hspace*{20pt}\ldots \\
+Low   & the countermeasures are completely effective,\\
+&(almost) nothing to worry about  \\
 \hline
 \end{tabular}
 \end{center}
@@ -203,7 +213,7 @@ List all medium and high risks, according to the evaluation above. For each risk
 \begin{prettytablex}{p{2cm}X}
 No. of threat & Proposed countermeasure including expected impact  \\
 \hline
-... & ... \\
+x & Allowing users only 3 attempts \\
 \hline
 ... & ... \\
 \hline
