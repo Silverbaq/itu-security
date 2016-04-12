@@ -3,26 +3,26 @@
 \subsection{Assets}
 
 \subsubsection{{\it Physical assets}}
-Server - The web server is located in a virtual machine and is up to date. The administrator is responsible to install all the patches guarantying the proper functionality. 
-Physical access to may allow an adversary to gain control of the system. A server can,
+Server - The web server is located on a virtual machine and is up to date. The administrator is responsible of installing all the patches guarantying the proper function of the server. 
+Physical access to it may allow an adversary to gain control of the system. A server can,
 for example, be booted with a different operating system.
 
 \subsubsection{{\it Logical assets}}
 It includes the operating system, the website, the database, the information related to the users and customer confidence. 
 
-Firewall - The IP table (firewall) of the server is properly configured and restricts access to the server. It keeps track of each connection passing through it and filters all the attempts to connect to the server except through allowed ports. The firewall is kept up-to-date and the administrator installs all security-relevant updates.
+\textit{Firewall} - The IP table (firewall) of the server is properly configured and restricts access to the server. It keeps track of each connection passing through it and filters all the attempts to connect to the server except through allowed ports. The firewall is kept up-to-date and the administrator installs all security-relevant updates.
 
-\subparagraph{} Website - The website provides the following services - uploading images, sharing them with others user, and posting comments. Only a user authorised for a picture can view, comment or read comments on that picture. No unauthorised user can prevent an image or a comment from being shown to authorised users. The website runs on the web-server which is kept up-to-date. The web developer is responsible for updating the functionality of the website. 
+\subparagraph{} \textit{Website} - The website provides the following services - uploading images, sharing them with others user, and posting comments. Only a user authorised for a picture can view, comment or read comments on that picture. No unauthorised user can prevent an image or a comment from being shown to authorised users. The website runs on the web-server which is kept up-to-date. The web developer is responsible for updating the functionality of the website. 
 
-Database - it keeps all the information related to the users, using the website. The username, passwords, pictures are stored on the database. It runs on the server and the access to it is restricted. The administrators is responsible for its maintenance.
+\textit{Database} - it keeps all the information related to the users, using the website. The username, passwords, pictures are stored in the database. It runs on the server and the access to it is restricted. The administrator is responsible for its maintenance.
 
-Information - all the information related the users is valuable and proper measures are taken to guarantee their confidentiality. The information includes especially the username, password, pictures uploaded by users. 
+\textit{Information} - all the informations related the users are valuable and proper measures are taken to guarantee their confidentiality. The informations include especially the username, password, pictures uploaded by users. 
 
-Pictures - all the uploaded images are kept on the database and are visible to the owner and others allowed by the users. There is no restrictions on the size of the images.
+\textit{Pictures} - all the uploaded images are kept on the server and are visible to the owner and other users allowed by the owner. There is no restrictions on the size of the images.
 
-Username and passwords - They identifies the owner of the pictures. All password are saved, using the proper hash functions guarantying the security. 
+\textit{Username and passwords} - They identify the owner of the pictures. All password are saved, using the proper hash functions guarantying the security. 
 
-Customer confidence - since the user can upload private pictures, which should be hidden for the world, user confidence is a important for a successful business relationship.
+\textit{Customer confidence} - since the user can upload private pictures, which should be hidden for the world, user confidence is important for a successful business relationship.
 
 \subsection{Threat Sources}
 
@@ -180,7 +180,7 @@ Low   & the countermeasures are completely effective,(almost) nothing to worry a
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
 \multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                         & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}} & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
-1                         & \begin{tabular}[c]{@{}l@{}}Theft of confidential \\ data\end{tabular}               & \begin{tabular}[c]{@{}l@{}}State-of-the-art \\ security measures\end{tabular}                         & Low                    & High                   & Low                    \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Theft of confidential \\ data\end{tabular}               & \begin{tabular}[c]{@{}l@{}}State-of-the-art \\ security measures,\\ hashing and salting\\ all passwords \\not keeping any sensitive\\ data \end{tabular}                         & Low                    & High                   & Low                    \\ \hline
 2                         & \begin{tabular}[c]{@{}l@{}}Customer unsatisfied \\ of the web services\end{tabular} & Attractive design                                                                                     & Medium                 & High                   & Medium                 \\ \hline
 \end{tabular}
 \end{table}
@@ -193,15 +193,17 @@ Optionally explain the details of the countermeasures mentioned above.
 
 \subsubsection{Risk Acceptance}
 
-List all medium and high risks, according to the evaluation above. For each risk, propose additional countermeasures that could be implemented to further reduce the risks.
+
 
 \begin{footnotesize}
 \begin{prettytablex}{p{2cm}X}
 No. of threat & Proposed countermeasure including expected impact  \\
 \hline
-x & Allowing users only 3 login attempts \\
+2.3.5 & Allowing users only 3 login attempts \\
 \hline
-y & using one time password sent by sms \\
+2.3.5 & using one time password sent by sms \\
+\hline
+2.3.5 & forcing users to create long passwords (including capital letters,\\& numbers and special characters)\\
 \hline
 \end{prettytablex}
 \end{footnotesize}
