@@ -4,3 +4,5 @@ reports/*.pdf
 reports/*.log
 reports/*.aux
 reports/*.toc
+reports/systemdescription.synctex.gz
+
