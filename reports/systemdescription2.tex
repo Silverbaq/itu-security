@@ -13,7 +13,7 @@ It includes the operating system, the website, the database, the information rel
 \textit{Firewall} - The IP table (firewall) of the server is properly configured and restricts access to the server. It keeps track of each connection passing through it and filters all the attempts to connect to the server except through allowed ports. The firewall is kept up-to-date and the administrator installs all security-relevant updates.
 
 
-\subparagraph{} \textit{Website} - The website provides the following services - uploading images, sharing them with others user, and posting comments. Only a user authorised for a picture can view, comment or read comments on that picture. No unauthorised user can prevent an image or a comment from being shown to authorised users. The website runs on the web-server which is kept up-to-date. The web developer is responsible for updating the functionality of the website. 
+\subparagraph{} \textit{Website} - The website provides the following functionality - uploading images, sharing them with others user, and posting comments. Only a user authorised for a picture can view, comment or read comments on that picture. No unauthorised user can prevent an image or a comment from being shown to authorised users. The website runs on the web-server which is kept up-to-date. The web developer is responsible for updating the functionality of the website. 
 
 \textit{Database} - it keeps all the information related to the users, using the website. The username, passwords, pictures are stored in the database. It runs on the server and the access to it is restricted. The administrator is responsible for its maintenance.
 
@@ -42,53 +42,35 @@ It includes the operating system, the website, the database, the information rel
 
 \subsection{Risks and Countermeasures}
 
-
-
-
 %\subsubsection{Tools}
 
-\begin{center}
+\begin{table}[H]
+\centering
+\label{my-label}
 \begin{tabular}{|l|l|}
 \hline
-\multicolumn{2}{|c|}{\bf Impact} \\
-\hline
-Impact & Description \\
-\hline
-\hline
-High & Complete shutdown of the system, \\
-     & user data is compromised, \\
-     & apocalypse and a major loss in asset value,\\
-     & complete loss of the customers confidence, \\
-     
-\hline
-Medium & system slow down\\
-	   & loss in asset value \\
-\hline
-Low   & relatively affect the credibility of the company,\\
-& lower the customers confidence and a relative loss in asset value\\
-\hline
+\multicolumn{2}{|c|}{\textbf{Impact}}                                                                                                                                                                                        \\ \hline
+\multicolumn{1}{|c|}{Impact} & Description                                                                                                                                                                                   \\ \hline
+High                         & \begin{tabular}[c]{@{}l@{}}Complete shutdown of the system, \\ user data is compromised,apocalypse and a major loss \\ in asset value, complete loss of the customers confidence\end{tabular} \\ \hline
+Medium                       & \begin{tabular}[c]{@{}l@{}}System slow down, \\ loss in asset value\end{tabular}                                                                                                              \\ \hline
+Low                          & \begin{tabular}[c]{@{}l@{}}Relatively affect the credibility \\ of the company,lower the customers \\ confidence and a relative loss in asset value\end{tabular}                              \\ \hline
 \end{tabular}
+\end{table}
 %
 %\vspace{5mm}
 %
-%\noindent \hspace*{10pt}
+\begin{table}[H]
+\centering
+\label{my-label}
 \begin{tabular}{|l|l|}
 \hline
-\multicolumn{2}{|c|}{\bf Likelihood} \\
-\hline
-Likelihood & Description \\
-\hline
-\hline
-High   &  the threat source has the power to exploit vulnerabilities in the system,\\
-& the countermeasures are inexistant or ineffective \\
-\hline
-Medium & the threat source is motivated, \\
-& some countermeasures are implemented which may prevent him to do harm \\
-\hline
-Low   & the countermeasures are completely effective,(almost) nothing to worry about \\
-\hline
+\multicolumn{2}{|c|}{\textbf{Likelihood}}                                                                                                                                                                     \\ \hline
+\multicolumn{1}{|c|}{Likelihood} & Description                                                                                                                                                                \\ \hline
+High                             & \begin{tabular}[c]{@{}l@{}}The threat source has the power to exploit \\ vulnerabilities in the system, the countermeasures \\ are inexistant or ineffective.\end{tabular} \\ \hline
+Medium                           & \begin{tabular}[c]{@{}l@{}}The threat source is motivated,some countermeasures \\ are implemented which may prevent him to do harm\end{tabular}                            \\ \hline
+Low                              & \begin{tabular}[c]{@{}l@{}}The countermeasures are completely effective, \\ (almost) nothing to worry about\end{tabular}                                                   \\ \hline
 \end{tabular}
-\end{center}
+\end{table}
 
 \vspace{5mm}
 
@@ -131,7 +113,7 @@ Low   & the countermeasures are completely effective,(almost) nothing to worry a
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
 \multicolumn{1}{|c|}{No.} & \multicolumn{1}{c|}{Threat}                                                                                                                                                                                                        & \multicolumn{1}{c|}{\begin{tabular}[c]{@{}c@{}}Implemented/planned \\ countermeasure(s)\end{tabular}}                                                                                 & \multicolumn{1}{c|}{L} & \multicolumn{1}{c|}{I} & \multicolumn{1}{c|}{R} \\ \hline
-1                         & \begin{tabular}[c]{@{}l@{}}Skilled hacker gains \\ control\\ over the \\ website, steals confidential \\ data, modifies website \\ settings because of \\ vularability either in \\ the server\\ or on \\ the website\end{tabular} & \begin{tabular}[c]{@{}l@{}}The\\ server is \\ hardened and regularly \\ updated. System \\ administrators are \\ trained to notice \\ irregularities on\\ the \\ server.\end{tabular} & Low                    & Medium                 & Low                    \\ \hline
+1                         & \begin{tabular}[c]{@{}l@{}}Skilled hacker gains \\ control\\ over the \\ website, steals confidential \\ data, modifies website \\ settings because of \\ vularability either in \\ the server\\ or on \\ the website\end{tabular} & \begin{tabular}[c]{@{}l@{}}The\\ server is \\ hardened and regularly \\ updated. System \\ administrator is \\ trained to notice \\ irregularities on\\ the \\ server.\end{tabular} & Low                    & Medium                 & Low                    \\ \hline
 2                         & \begin{tabular}[c]{@{}l@{}}Script\\ kiddies makes \\ modifications on the\\  website as a result \\ of an attack\end{tabular}                                                                                                      & \begin{tabular}[c]{@{}l@{}}The\\ server is \\ properly maintained, \\ the website is \\ hardened, all input \\ is sanitized\end{tabular}                                              & Low                    & Medium                 & Low                    \\ \hline
 \end{tabular}
 \end{table}
