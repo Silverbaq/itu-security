@@ -1,10 +1,12 @@
 .idea/
 ImageSharing/static/img/
 reports/system_description/*.pdf
+reports/system_description/*.aux
 reports/system_description/*.log
 reports/system_description/*.tex.aux
 reports/system_description/*.toc
 reports/system_description/*.synctex.gz
+reports/review/*.aux
 reports/review/*.pdf
 reports/review/*.log
 reports/review/*.tex.aux
