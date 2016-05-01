@@ -4,5 +4,10 @@ reports/system_description/*.pdf
 reports/system_description/*.log
 reports/system_description/*.tex.aux
 reports/system_description/*.toc
-reports/*system_description/*.synctex.gz
+reports/system_description/*.synctex.gz
+reports/review/*.pdf
+reports/review/*.log
+reports/review/*.tex.aux
+reports/review/*.toc
+reports/review/*.synctex.gz
 
