@@ -61,12 +61,12 @@ As originally stated in the project description, the system implements the main 
 We recognize mainly two elements of the system, the web application  and the database. Both sitting on top of the Ubuntu Server. In order to connect to the server we are using the OpenSHH suite.
   
 \begin{itemize}
-\item Platform: the virtual machine is running Ubuntu Server 14.04.01 which is the Long Term Support version of the server.
+\item Platform: the virtual machine is running Ubuntu Server 14.04.01, known as the Long Term Support version of the server which offers updates for five years. 
 
 
-\item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server is \\SimpleHTTPServer, that is a part of the python standard library. The framework offer inbuilt security features, such as sanitisation of fields and it only offers the minimum building blocks which http server, micro framework, only the minimum 
+\item Web Application: The web application is build in Python 2.7, together with the micro-framework Flask. Hence, the web server currently in use is  SimpleHTTPServer, that is a part of the Python standard library. The framework offers inbuilt security features, such as sanitisation of fields and it only includes the minimum building blocks of a web system, which gives us the possibility to decide which parts of the Python community library we want to use to construct the web application.  
 
-\item Database: SQLite3 is used as storage of users for the web application, and all the content that is in addition with it. This means that there is no daemon running, since everything is stored in the same file. To access and manipulation of the database, it is needed to have access to this file. This means that for altering, 
+\item Database: SQLite3 is used as storage of users for the web application, and all the dynamic content such as comments, pictures paths, and relationships between users. This means that there is no daemon running, since everything is stored in the same file. To access and manipulate the database, it is needed to have access to this file. 
 \end{itemize}
 \begin{itemize}
 
@@ -76,15 +76,17 @@ We recognize mainly two elements of the system, the web application  and the dat
 \end{itemize}
 
 \subsection{Interfaces}
+The main interface of the application is the web site, where the user interacts with the application, therefore a series of test have been performed to ensure that the information coming from the user is free of potential html tags that can compromise the security of the system.\\ \\
+There is a second interface between the web application and the database, 
+in this case, the application communicates with the database using SQL. To avoid SQL injections we prepare the statements before sending them to the database.\\ \\
+Administrators and web developers can access the system using SSH, a special attention has been put in the selection of a long and unique password plus the creation of a very strong SSH key that allows the superusers access the server.
 
-Specify  all interfaces and  information flows, from the technical as well as from the
-  organizational point of view.
 
 \subsection{Backdoors}
 \textbf{Easy to find:}\\ 
 Netcat is running on port 60606. This makes it possible to make remote access to the service through this port.\\ \\
-The reason for putting the port number in the higher numbers, is first of all that the first 1024 ports are “well-known” ports.  Meaning that they have been defined to serve a purpose. E.g. 80 is HTTP, 443 is HTTPS, 666 is Doom. If the user makes a nmap scan on the system, these are the port the scanner will look for by default. This meaning that if someone wish to find this backdoor, they will need to specify the search a bit.\\ \\
-To find that this is the case, you can do several things.
+The reason for putting the port number in the higher numbers, is first of all that the first 1024 ports are “well-known” ports.  Meaning that they have been defined to serve a purpose. E.g. 80 is HTTP, 443 is HTTPS, 666 is Doom. If the user makes a nmap scan on the system, these are the port the scanner will look for by default. This means that if someone wish to find this backdoor, the attacker will need to improve the search a bit more.\\ \\
+In order to accomplish that, an adversary, could intent a couple of strategies :
 \begin{itemize}
 \item Nmap: To find this with nmap:\\
 \textit{Command:} nmap 192.168.1.10 -p 1-65535
@@ -94,12 +96,12 @@ To find that this is the case, you can do several things.
 \ \\
 \textbf{Hard to find:}
 \begin{itemize}
-\item Ubuntu 14.04 has an overlayfs vulnerability (CVE-2015-8660). The code to use for this exploit can be found at: https://www.exploit-db.com/exploits/39166/ - This will give local root access.
+\item Ubuntu 14.04 has an overlays vulnerability (CVE-2015-8660). The code to use for this exploit can be found at: https://www.exploit-db.com/exploits/39166/ - This will give local root access.
 \end{itemize}
 \ \\
-To perform the exploit, do the following:\\
-We have compiled the exploit, and placed it under the /bin/pwn. This means that if someone on the system calls the command “pwn” from anywhere on the system, the user will gain root access. \\ \\
-For the fun of it, we have made a user with a low amount of privileges on the system. The username is admin, which have been given a password from the top 500 most used passwords. It should therefore be fairly easy to bruteforce the password. \\ \\
+To perform the exploit, proceed as following:\\
+We have compiled the exploit, and placed it under /bin/pwn. This means that if someone on the system calls the command “pwn” from anywhere on the system, the user will gain root access. \\ \\
+For the fun of it, we have made a user with a low amount of privileges on the system. The user name is admin, which have been given a password from the top 300 most used passwords according to SecLists\footnote{github.com/danielmiessler/SecLists}. It should  therefore, be fairly easy to brute force. \\ \\
 So if/when this user has been cracked, someone can login to the server with SSH, call the command pwn – And bingo! Root access…\\ \\
 Something to note:
 With the web application, it is possible to upload files, as long as the file extension is of an image sort. This means that it is possible to upload any kind of data to the server since it’s only the naming of the file that makes a difference, and not the content of the file. 
