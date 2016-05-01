@@ -1,7 +1,8 @@
 .idea/
 ImageSharing/static/img/
-reports/*.pdf
-reports/*.log
-reports/*.aux
-reports/*.toc
-reports/*.synctex.gz
+reports/system_description/*.pdf
+reports/system_description/*.log
+reports/system_description/*.tex.aux
+reports/system_description/*.toc
+reports/*system_description/*.synctex.gz
+
