@@ -1,6 +1,6 @@
 \subsection{Implementation}
 
-While looking at the solution, we found some vulnerabilities. \\
+While looking at the solution, we found the following vulnerabilities. \\
 
 \begin{center}
 \textbf{WEB SITE}
@@ -35,24 +35,24 @@ It is important that anti-CSRF tokens are validated when user requests are handl
 - /sec/views/login.html \\
 
 \textbf{Issue background} \\
-Cross-site Request Forgery (CSRF) is an attack which forces an end user to execute unwanted actions on a web application to which he/she is currently authenticated. With a little help of social engineering (like sending a link via email / chat), an attacker may trick the users of a web application into executing actions of the attacker's choosing. A successful CSRF exploit can compromise end user data and may allow an attacker to perform an account hijack. If the targeted end user is the administrator account, this can compromise the entire web application. \\
+The applicagtion is vulnerable to a Cross-site Request Forgery (CSRF) attack. In terms of user security, an adversary can use social engineering to deceive a  users of the web application into executing actions of the attacker's choosing. A successful CSRF exploit can compromise end user data and may allow an attacker to perform an account hijack. If the targeted end user is the administrator account, this can compromise the entire web application. \\
 
 \textbf{Issue remediation} \\
-The application should implement anti-CSRF tokens into all requests that perform actions which change the application state or which add/modify/delete content. An anti-CSRF token should be a long randomly generated value unique to each user so that attackers cannot easily brute-force it. \\ 
+A simple improvement could be the implementation of an anti-CSRF token in every request that performs actions which change the application state (create, update and delete requests)\footnote{ \url{www.owasp.org/index.php/CSRF_Prevention_Cheat_Sheet}}. A well defined anti-CSRF token should be long and randomly generated, to ensure uniqueness for each user so that attackers will have a very difficult time trying to  brute-force it. \\ 
 
-It is important that anti-CSRF tokens are validated when user requests are handled by the application. The application should both verify that the token exists in the request, and also check that it matches the user's current token. If either of these checks fails, the application should reject the request. 
 
-\item \textbf{Password submitted using GET method} \\
+
+
+\item \textbf{Unused login submitting passwords using GET method} \\
 - /sec/views/login.html \\
 - /sec/views/login.html \\
 
 \textbf{Issue background}\\
-Some applications use the GET method to submit passwords, which are transmitted within the query string of the requested URL. Sensitive information within URLs may be logged in various locations, including the user's browser, the web server, and any forward or reverse proxy servers between the two endpoints. URLs may also be displayed on-screen, bookmarked or emailed around by users. They may be disclosed to third parties via the Referer header when any off-site links are followed. Placing passwords into the URL increases the risk that they will be captured by an attacker. \\
+This part of the website seems to be an error of the designer who forgot to delete this view, that does nothing and seems to not be connected with the systems, which makes sense since the report point out the use of POST for this kind of requests. Funny enough, this login does the opposite, but unfortunately for us, we have not yet find a way to exploit the system using this development oversight. \\
 
-Vulnerabilities that result in the disclosure of users' passwords can result in compromises that are extremely difficult to investigate due to obscured audit trails. Even if the application itself only handles non-sensitive information, exposing passwords puts users who have re-used their password elsewhere at risk. \\
 
 \textbf{Issue remediation}\\
-All forms submitting passwords should use the POST method. To achieve this, applications should specify the method attribute of the FORM tag as method="POST". It may also be necessary to modify the corresponding server-side form handler to ensure that submitted passwords are properly retrieved from the message body, rather than the URL.
+Delete this views as soon as possible and use POST instead of GET as the original login is doing.
 
 \item \textbf{Open redirection (DOM-based)} \\
 
