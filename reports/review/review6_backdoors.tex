@@ -1,7 +1,6 @@
 \subsection{Backdoors}
 
 If defining a backdoor as a way to gain root access to the system. Then we didn't manage to exploit any. \\
-One thing we do know, is that the server is running "WildFly", and that comes with a webinterface, that will give you access to a terminal to the system. This is of course proteced with  authentication. We have tryed an attempt to break this, with the top 500 most used password, and the username admin - But with no luck. \\
-
-By looking at the results, given by the automated scans from OpenVAS. We do believe, that it should be possible to gain access to the system, by exploiting some of the weaknesses. E.g. Since the system has vulnerabilities with the apache (PHP) part. Uploading files, and doing code execution through PHP could be possiable.\\
-By poking enough around, there might also be the possibility to use Metasploit, and gain access to a shell that way.
+One thing we do know, is that the server is running "WildFly", and that comes with a webinterface, that will give you access to a terminal to the system. This is of course proteced with  authentication. We have tryed an attempt to break this, with the top 500 most used password, and the username admin - But with no luck. \\ \\
+By looking at the report, given by an automated scan with OpenVAS. We do believe, that it should be possible to gain access to the system, by exploiting some of the weaknesses. E.g. Since the system has vulnerabilities with the apache server. Uploading files so they are handeled by apache, could possiably lead to executing bash scripts, through PHP. \\
+By poking enough around, there might also be the possibility to use Metasploit, and gain access to a shell that way. But sadly time court up with us, and we didn't manage to make this happen.
