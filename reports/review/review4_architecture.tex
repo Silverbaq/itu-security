@@ -1,15 +1,6 @@
 \subsection{Architecture and Security Concepts}
 
-Study the documentation that came with the external system and
-evaluation.
-Is the chosen architecture well suited for the tasks specified in the 
-requirements?  Is the risk analysis coherent and complete?   Are the
-countermeasures appropriate?
-
-The system is using a Postgres database with a Wildfly server that holds the java application as a war file. Postgres is world known for being  a very robust and full featured open source database. In that regard we agree with the decision of the database and we give them five it starts.
-
-Regarding the Wildfly server, as any other web server, it have had some well known vulnerabilities, but the most known vulnerabilities are at this point of time fixed. On the other hand, 
-
-crud and rest api
-
-javascript and angular
+The architecture of the system can be described by the interaction of three components: a Postgres database to save comments and pictures, a Wildfly server wich is serving an HTTP API, and finally, in order to make use of this API, the client side use AngularJS to connect to the server, but also to interact with the client and make request to the API. The communication to the database is handled by the HTTP API wich comminicates to the database to perform CRUD operations. \\ \\ 
+We consider that the architecture for the system use a very common style of design, used in moderns applications. In this case the team should consider to harden the Ubuntu Server, the database, the WildFly server and the code for the Client Side. Since the time is very concise, they need to focus on the most critical parts of the system and that can be reflected in the risk analysis.\\ \\
+The risk analysis identifies database records, pictures, and comments as assets that have to be protected. Furthermore, they expect not very sophisticated attacks and natural catastrophes as potential threaths. Accordingly, the system make  use of prepared statements to secure the database records, for instance.\\ \\
+ 
