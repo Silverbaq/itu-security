@@ -2,9 +2,6 @@
 
 While looking at the solution, we found some vulnerabilities. \\
 
-\begin{center}
-\textbf{WEB SITE}
-\end{center}
 \begin{itemize}  
 \item \textbf{Cleartext submission of passwords (login):}
 -passwords are sent over unincrepted connection, this may let someone listening to the network traffic aqcuire the user's password.
@@ -12,23 +9,26 @@ this would especially be dangerous if the user uses a public wi-fi.
 even if in this case the web service does not contain sensitive data, a lot of people re use the same passwords on different platforms and even for online banking.
 
 \item \textbf{Access to images:}
-Anyone can access all the shared images on the fakestagram website on www.fakestagram.com:8080/img/"imagename" even without been logged in, the user has to enter the image name he wants to see,(one can surely guess some easy ones fx: me.jpg or dog.jpg)
+Anyone can access all the shared images on the fakestagram website on www.fakestagram.com:8080/img/''imagename'' even without been logged in, the user has to enter the image name he wants to see,(one can surely guess some easy ones fx: me.jpg or dog.jpg)
 this violates the confidentiality requirement
 
 
 \item \textbf{Cross-site scripting (reflected)} \\
-
 The value of the username request parameter is copied into the HTML document as plain text between tags. The payload <script>alert(1)</script> was submitted in the username parameter. This input was echoed unmodified in the application's response. \\
 
 This proof-of-concept attack demonstrates that it is possible to inject arbitrary JavaScript into the application's response. \\
 
 To solve this issue, a very good way is to validate user input. For example, personal names should consist of alphabetical and a small range of typographical characters, and be relatively short; A year of birth should consist of exactly four numerals; And so on.
 
-\end{itemize}
+\item \textbf{DOM based redirection:}\\
+The website is vulnerable for DOM-based open redirection. This type of redirection appears when a client-side scripts reads data from a controllable part of DOM like URL and processes it in unsafe way. This vulnerability is used in fishing attacks to force the user to visit malicious sites without realizing it; it opens a door for a hacker to inject malicious code on the page. In the website data is read from document.location and passed to document.location via the following statements: var a = document.location.toString().substr(0,document.location.toString().length-
+1)+”:8080/sec”; document.location = a;
+The recommendation is input to be validated before redirection.
 
-\begin{center}
-\textbf{SYSTEM}
-\end{center}
+
+\end{itemize}
+\textbf{System scan}\\
+For a overall scan of the system, we have used OpenVAS 8, which have found the following vulnerabilities:
 
 \begin{itemize}
 \item \textbf{phpinfo() output accessible}\\
@@ -42,40 +42,23 @@ Delete them or restrict access to the listened files.\\
 \item \textbf{php Multiple Vulnerabilities} \\
 Installed Version: 5.5.9\\
 
-
-CVE: CVE-2015-4148, CVE-2015-4147, CVE-2015-2787, CVE-2015-2348, CVE-2015-2331 CVE: CVE-2015-4026, CVE-2015-4025, CVE-2015-4024, CVE-2015-4022, CVE-2015-4021 CVE-2015-3329, CVE-2015-3307, CVE-2015-2783, CVE-2015-1352 CVE-2015-6831, CVE-2015-6832, CVE-2015-6833 CVE-2015-3330\\
-
-
+CVE: CVE-2015-4148, CVE-2015-4147, CVE-2015-2787, CVE-2015-2348, CVE-2015-2331 CVE: CVE-2015-4026, CVE-2015-4025, CVE-2015-4024, CVE-2015-4022, CVE-2015-4021 CVE-2015-3329, CVE-2015-3307, CVE-2015-2783, CVE-2015-1352 CVE-2015-6831, CVE-2015-6832, CVE-2015-6833 CVE-2015-3330
 \item \textbf{php Multiple Remote Code Execution Vulnerabilities} \\
-CVE: CVE-2015-0273, CVE-2014-9705 \\
-
-
+CVE: CVE-2015-0273, CVE-2014-9705 
 \item \textbf{php Use-After-Free Remote Code Execution Vulnerability } \\
-CVE: CVE-2015-2301\\
-
-
-
+CVE: CVE-2015-2301
 \item \textbf{php Use-After-Free Denial Of Service Vulnerability} \\
-CVE: CVE-2015-1351\\
-
-
+CVE: CVE-2015-1351
 \item \textbf{php 'serialize\_function\_call' Function Type Confusion Vulnerability} \\
-CVE: CVE-2015-6836\\
-
-
+CVE: CVE-2015-6836
 \item \textbf{php 'phar\_fix\_filepath' Function Stack Buffer Overflow Vulnerability} \\
-CVE: CVE-2015-5590\\
-
-
+CVE: CVE-2015-5590
 \item \textbf{php Multiple Denial of Service Vulnerabilities} \\
-CVE: CVE-2015-7804, CVE-2015-7803\\
-
-
+CVE: CVE-2015-7804, CVE-2015-7803
 \item \textbf{php Out of Bounds Read Memory Corruption Vulnerability} \\
-CVE: CVE-2016-1903\\
-
+CVE: CVE-2016-1903
 \item \textbf{Apache HTTP Server Multiple Vulnerabilities} \\
-CVE: CVE-2015-3185, CVE-2015-3183\\
+CVE: CVE-2015-3185, CVE-2015-3183
 
 
 \end{itemize}
