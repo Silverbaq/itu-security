@@ -6,86 +6,14 @@ While looking at the solution, we found some vulnerabilities. \\
 \textbf{WEB SITE}
 \end{center}
 \begin{itemize}  
-\item \textbf{Cleartext submission of password} \\
-/sec/views/login.html \\
+\item \textbf{Cleartext submission of passwords (login):}
+-passwords are sent over unincrepted connection, this may let someone listening to the network traffic aqcuire the user's password.
+this would especially be dangerous if the user uses a public wi-fi.
+even if in this case the web service does not contain sensitive data, a lot of people re use the same passwords on different platforms and even for online banking.
 
-\textbf{Issue background}\\
-Some applications transmit passwords over unencrypted connections, making them vulnerable to interception. To exploit this vulnerability, an attacker must be suitably positioned to eavesdrop on the victim's network traffic. This scenario typically occurs when a client communicates with the server over an insecure connection such as public Wi-Fi, or a corporate or home network that is shared with a compromised computer. Common defenses such as switched networks are not sufficient to prevent this. An attacker situated in the user's ISP or the application's hosting infrastructure could also perform this attack. Note that an advanced adversary could potentially target any connection made over the Internet's core infrastructure.\\
-
-Vulnerabilities that result in the disclosure of users' passwords can result in compromises that are extremely difficult to investigate due to obscured audit trails. Even if the application itself only handles non-sensitive information, exposing passwords puts users who have re-used their password elsewhere at risk.\\
-
-\textbf{Issue remediation}\\
-Applications should use transport-level encryption (SSL or TLS) to protect all sensitive communications passing between the client and the server. Communications that should be protected include the login mechanism and related functionality, and any functions where sensitive data can be accessed or privileged actions can be performed. These areas should employ their own session handling mechanism, and the session tokens used should never be transmitted over unencrypted communications. If HTTP cookies are used for transmitting session tokens, then the secure flag should be set to prevent transmission over clear-text HTTP.
-
-\item \textbf{Form does not contain an anti-CSRF token}\\
-- /sec/views/login.html \\
-- /sec/views/profile.html \\ \\
-\textbf{Issue background} \\
-Cross-site Request Forgery (CSRF) is an attack which forces an end user to execute unwanted actions on a web application to which he/she is currently authenticated. With a little help of social engineering (like sending a link via email / chat), an attacker may trick the users of a web application into executing actions of the attacker's choosing. A successful CSRF exploit can compromise end user data and may allow an attacker to perform an account hijack. If the targeted end user is the administrator account, this can compromise the entire web application.\\ \\
-
-\textbf{Issue remediation} \\
-The application should implement anti-CSRF tokens into all requests that perform actions which change the application state or which add/modify/delete content. An anti-CSRF token should be a long randomly generated value unique to each user so that attackers cannot easily brute-force it.
-
-It is important that anti-CSRF tokens are validated when user requests are handled by the application. The application should both verify that the token exists in the request, and also check that it matches the user's current token. If either of these checks fails, the application should reject the request. 
-
-\item \textbf{Request vulnerable to Cross-site Request Forgery} \\
-- /sec/resources/account/create \\
-- /sec/resources/account/login \\
-- /sec/resources/protected/file \\
-- /sec/views/login.html \\
-
-\textbf{Issue background} \\
-Cross-site Request Forgery (CSRF) is an attack which forces an end user to execute unwanted actions on a web application to which he/she is currently authenticated. With a little help of social engineering (like sending a link via email / chat), an attacker may trick the users of a web application into executing actions of the attacker's choosing. A successful CSRF exploit can compromise end user data and may allow an attacker to perform an account hijack. If the targeted end user is the administrator account, this can compromise the entire web application. \\
-
-\textbf{Issue remediation} \\
-The application should implement anti-CSRF tokens into all requests that perform actions which change the application state or which add/modify/delete content. An anti-CSRF token should be a long randomly generated value unique to each user so that attackers cannot easily brute-force it. \\ 
-
-It is important that anti-CSRF tokens are validated when user requests are handled by the application. The application should both verify that the token exists in the request, and also check that it matches the user's current token. If either of these checks fails, the application should reject the request. 
-
-\item \textbf{Password submitted using GET method} \\
-- /sec/views/login.html \\
-- /sec/views/login.html \\
-
-\textbf{Issue background}\\
-Some applications use the GET method to submit passwords, which are transmitted within the query string of the requested URL. Sensitive information within URLs may be logged in various locations, including the user's browser, the web server, and any forward or reverse proxy servers between the two endpoints. URLs may also be displayed on-screen, bookmarked or emailed around by users. They may be disclosed to third parties via the Referer header when any off-site links are followed. Placing passwords into the URL increases the risk that they will be captured by an attacker. \\
-
-Vulnerabilities that result in the disclosure of users' passwords can result in compromises that are extremely difficult to investigate due to obscured audit trails. Even if the application itself only handles non-sensitive information, exposing passwords puts users who have re-used their password elsewhere at risk. \\
-
-\textbf{Issue remediation}\\
-All forms submitting passwords should use the POST method. To achieve this, applications should specify the method attribute of the FORM tag as method="POST". It may also be necessary to modify the corresponding server-side form handler to ensure that submitted passwords are properly retrieved from the message body, rather than the URL.
-
-\item \textbf{Open redirection (DOM-based)} \\
-
-\textbf{Issue detail} \\
-The application may be vulnerable to DOM-based open redirection. Data is read from document.location and passed to document.location via the following statements:
-var a = document.location.toString().substr(0,document.location.toString().length-1)+":8080/sec";
-document.location = a; \\
-
-\textbf{Issue background} \\
-DOM-based vulnerabilities arise when a client-side script reads data from a controllable part of the DOM (for example, the URL) and processes this data in an unsafe way. \\
-
-DOM-based open redirection arises when a script writes controllable data into the target of a redirection in an unsafe way. An attacker may be able to use the vulnerability to construct a URL that, if visited by another application user, will cause a redirection to an arbitrary external domain. This behavior can be leveraged to facilitate phishing attacks against users of the application. The ability to use an authentic application URL, targeting the correct domain and with a valid SSL certificate (if SSL is used), lends credibility to the phishing attack because many users, even if they verify these features, will not notice the subsequent redirection to a different domain. \\
-
-Note: If an attacker is able to control the start of the string that is passed to the redirection API, then it may be possible to escalate this vulnerability into a JavaScript injection attack, by using a URL with the javascript: pseudo-protocol to execute arbitrary script code when the URL is processed by the browser. \\
-
-Burp Suite automatically identifies this issue using static code analysis, which may lead to false positives that are not actually exploitable. The relevant code and execution paths should be reviewed to determine whether this vulnerability is indeed present, or whether mitigations are in place that would prevent exploitation.\\
-
-\textbf{Issue remediation} \\
-The most effective way to avoid DOM-based open redirection vulnerabilities is not to dynamically set redirection targets using data that originated from any untrusted source. If the desired functionality of the application means that this behavior is unavoidable, then defenses must be implemented within the client-side code to prevent malicious data from introducing an arbitrary URL as a redirection target. In general, this is best achieved by using a whitelist of URLs that are permitted redirection targets, and strictly validating the target against this list before performing the redirection.
-
-\item \textbf{Password field with autocomplete enabled} \\
-- /sec/views/login.html \\
-- /sec/views/login.html \\
-
-\textbf{Issue background} \\
-Most browsers have a facility to remember user credentials that are entered into HTML forms. This function can be configured by the user and also by applications that employ user credentials. If the function is enabled, then credentials entered by the user are stored on their local computer and retrieved by the browser on future visits to the same application.\\
-
-The stored credentials can be captured by an attacker who gains control over the user's computer. Further, an attacker who finds a separate application vulnerability such as cross-site scripting may be able to exploit this to retrieve a user's browser-stored credentials.\\
-
-\textbf{Issue remediation} \\
-To prevent browsers from storing credentials entered into HTML forms, include the attribute autocomplete="off" within the FORM tag (to protect all form fields) or within the relevant INPUT tags (to protect specific individual fields). \\
-
-Please note that modern web browsers may ignore this directive. In spite of this there is a chance that not disabling autocomplete may cause problems obtaining PCI compliance.\\
+\item \textbf{Access to images:}
+Anyone can access all the shared images on the fakestagram website on www.fakestagram.com:8080/img/"imagename" even without been logged in, the user has to enter the image name he wants to see,(one can surely guess some easy ones fx: me.jpg or dog.jpg)
+this violates the confidentiality requirement
 
 
 \item \textbf{Cross-site scripting (reflected)} \\
