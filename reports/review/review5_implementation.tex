@@ -2,9 +2,6 @@
 
 While looking at the solution, we found some vulnerabilities. \\
 
-\begin{center}
-\textbf{WEB SITE}
-\end{center}
 \begin{itemize}  
 \item \textbf{Cleartext submission of passwords (login):}
 -passwords are sent over unincrepted connection, this may let someone listening to the network traffic aqcuire the user's password.
@@ -17,7 +14,6 @@ this violates the confidentiality requirement
 
 
 \item \textbf{Cross-site scripting (reflected)} \\
-
 The value of the username request parameter is copied into the HTML document as plain text between tags. The payload <script>alert(1)</script> was submitted in the username parameter. This input was echoed unmodified in the application's response. \\
 
 This proof-of-concept attack demonstrates that it is possible to inject arbitrary JavaScript into the application's response. \\
@@ -30,22 +26,12 @@ The website is vulnerable for DOM-based open redirection. This type of redirecti
 The recommendation is input to be validated before redirection.
 
 
-\item \textbf{Password field with auto-complete enabled::}\\
-- /sec/views/login.html\\
-- /sec/views/login.html\\
-
-On the website auto-complete function is enabled. It means that the browser can save user's credentials on the machine to retrieve them on later visit of the website. If an attacker gains control over the machine, he/she can retrieve user’s browser-stored credentials. 
-Recommendation: In the Form tag or in the relevant INPUT tags auto-complete=”off” could be entered.
-
 \end{itemize}
-
-\begin{center}
-\textbf{SYSTEM}
-\end{center}
+\textbf{System scan}\\
+For a overall scan of the system, we have used OpenVAS 8, which have found the following vulnerabilities:
 
 \begin{itemize}
 \item \textbf{phpinfo() output accessible}\\
-
 
 \textbf{Impact}\\
 Some of the information that can be gathered from this file includes: The username of the user who installed php, if they are a SUDO user, the IP address of the host, the web server version, the system version(unix / linux), and the root directory of the web server.\\
@@ -56,40 +42,23 @@ Delete them or restrict access to the listened files.\\
 \item \textbf{php Multiple Vulnerabilities} \\
 Installed Version: 5.5.9\\
 
-
-CVE: CVE-2015-4148, CVE-2015-4147, CVE-2015-2787, CVE-2015-2348, CVE-2015-2331 CVE: CVE-2015-4026, CVE-2015-4025, CVE-2015-4024, CVE-2015-4022, CVE-2015-4021 CVE-2015-3329, CVE-2015-3307, CVE-2015-2783, CVE-2015-1352 CVE-2015-6831, CVE-2015-6832, CVE-2015-6833 CVE-2015-3330\\
-
-
+CVE: CVE-2015-4148, CVE-2015-4147, CVE-2015-2787, CVE-2015-2348, CVE-2015-2331 CVE: CVE-2015-4026, CVE-2015-4025, CVE-2015-4024, CVE-2015-4022, CVE-2015-4021 CVE-2015-3329, CVE-2015-3307, CVE-2015-2783, CVE-2015-1352 CVE-2015-6831, CVE-2015-6832, CVE-2015-6833 CVE-2015-3330
 \item \textbf{php Multiple Remote Code Execution Vulnerabilities} \\
-CVE: CVE-2015-0273, CVE-2014-9705 \\
-
-
+CVE: CVE-2015-0273, CVE-2014-9705 
 \item \textbf{php Use-After-Free Remote Code Execution Vulnerability } \\
-CVE: CVE-2015-2301\\
-
-
-
+CVE: CVE-2015-2301
 \item \textbf{php Use-After-Free Denial Of Service Vulnerability} \\
-CVE: CVE-2015-1351\\
-
-
+CVE: CVE-2015-1351
 \item \textbf{php 'serialize\_function\_call' Function Type Confusion Vulnerability} \\
-CVE: CVE-2015-6836\\
-
-
+CVE: CVE-2015-6836
 \item \textbf{php 'phar\_fix\_filepath' Function Stack Buffer Overflow Vulnerability} \\
-CVE: CVE-2015-5590\\
-
-
+CVE: CVE-2015-5590
 \item \textbf{php Multiple Denial of Service Vulnerabilities} \\
-CVE: CVE-2015-7804, CVE-2015-7803\\
-
-
+CVE: CVE-2015-7804, CVE-2015-7803
 \item \textbf{php Out of Bounds Read Memory Corruption Vulnerability} \\
-CVE: CVE-2016-1903\\
-
+CVE: CVE-2016-1903
 \item \textbf{Apache HTTP Server Multiple Vulnerabilities} \\
-CVE: CVE-2015-3185, CVE-2015-3183\\
+CVE: CVE-2015-3185, CVE-2015-3183
 
 
 \end{itemize}
