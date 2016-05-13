@@ -24,6 +24,19 @@ This proof-of-concept attack demonstrates that it is possible to inject arbitrar
 
 To solve this issue, a very good way is to validate user input. For example, personal names should consist of alphabetical and a small range of typographical characters, and be relatively short; A year of birth should consist of exactly four numerals; And so on.
 
+\item \textbf{DOM based redirection:}\\
+The website is vulnerable for DOM-based open redirection. This type of redirection appears when a client-side scripts reads data from a controllable part of DOM like URL and processes it in unsafe way. This vulnerability is used in fishing attacks to force the user to visit malicious sites without realizing it; it opens a door for a hacker to inject malicious code on the page. In the website data is read from document.location and passed to document.location via the following statements: var a = document.location.toString().substr(0,document.location.toString().length-
+1)+”:8080/sec”; document.location = a;
+The recommendation is input to be validated before redirection.
+
+
+\item \textbf{Password field with auto-complete enabled::}\\
+- /sec/views/login.html\\
+- /sec/views/login.html\\
+
+On the website auto-complete function is enabled. It means that the browser can save user's credentials on the machine to retrieve them on later visit of the website. If an attacker gains control over the machine, he/she can retrieve user’s browser-stored credentials. 
+Recommendation: In the Form tag or in the relevant INPUT tags auto-complete=”off” could be entered.
+
 \end{itemize}
 
 \begin{center}
@@ -32,6 +45,7 @@ To solve this issue, a very good way is to validate user input. For example, per
 
 \begin{itemize}
 \item \textbf{phpinfo() output accessible}\\
+
 
 \textbf{Impact}\\
 Some of the information that can be gathered from this file includes: The username of the user who installed php, if they are a SUDO user, the IP address of the host, the web server version, the system version(unix / linux), and the root directory of the web server.\\
