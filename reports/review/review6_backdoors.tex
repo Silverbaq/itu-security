@@ -1,6 +1,11 @@
 \subsection{Backdoors}
 
+
+The system is running the website on a “WildFly” service, at port 8080. On the website (fakestagram), it is possible to upload images to the sever (and almost every other type of file), which will be saved, and can then be found at “http://[IP]:8080/img/”. There is also running a version of apache on the system. It is looking at the same location on the system that the files get uploaded to. \\
+Therefore it is possible to upload PHP files from fakestagram, on the WildFly service, and execute the PHP with apache. \\ \\
+By uploading the following PHP code:\\
+** CODE ** \\
+We can see from from what user that executes the code, and from where it is being done. \\
+** Images **\\
 If defining a backdoor as a way to gain root access to the system. Then we didn't manage to exploit any. \\
-One thing we do know, is that the server is running "WildFly", and that comes with a webinterface, that will give you access to a terminal to the system. This is of course proteced with  authentication. We have tryed an attempt to break this, with the top 500 most used password, and the username admin - But with no luck. \\ \\
-By looking at the report, given by an automated scan with OpenVAS. We do believe, that it should be possible to gain access to the system, by exploiting some of the weaknesses. E.g. Since the system has vulnerabilities with the apache server. Uploading files so they are handeled by apache, could possiably lead to executing bash scripts, through PHP. \\
-By poking enough around, there might also be the possibility to use Metasploit, and gain access to a shell that way. But sadly time court up with us, and we didn't manage to make this happen.
+But we do believe that by poking a bit more around in the system from the remote code execution with PHP, we might have gained root access.
